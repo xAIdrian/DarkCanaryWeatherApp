@@ -1,10 +1,18 @@
 package com.zhudapps.darkcanary.main
 
-import androidx.appcompat.app.AppCompatActivity
+import android.Manifest
+import android.content.pm.PackageManager
 import android.os.Bundle
+import android.util.Log
+import android.view.View
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
+import com.google.android.material.snackbar.Snackbar
 import com.zhudapps.darkcanary.R
-import com.zhudapps.darkcanary.dagger.ViewModelProviderFactory
+import com.zhudapps.darkcanary.dagger.viewmodel.ViewModelProviderFactory
 import dagger.android.support.DaggerAppCompatActivity
 import javax.inject.Inject
 
@@ -14,10 +22,15 @@ import javax.inject.Inject
  */
 class MainActivity : DaggerAppCompatActivity() {
 
-    @Inject
-    lateinit var factory: ViewModelProviderFactory
+    companion object {
+        private const val TAG = "MainActivity"
+        private const val MY_PERMISSIONS_REQUEST_COURSE_LOCATION = 101
+    }
 
-    private lateinit var viewModel: MainViewModel
+    @Inject
+    lateinit var factory: ViewModelProvider.Factory
+
+    private var viewModel: MainViewModel? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -26,7 +39,61 @@ class MainActivity : DaggerAppCompatActivity() {
         if (::factory.isInitialized) {
             viewModel = ViewModelProviders.of(this, factory).get(MainViewModel::class.java)
 
-            viewModel.initUserLocation()
+            //viewModel?.initUserLocation()
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        managePermissions()
+    }
+
+    private fun managePermissions() {
+        if (ContextCompat.checkSelfPermission(
+                this,
+                Manifest.permission.ACCESS_COARSE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            // Permission is not granted
+            if (ActivityCompat.shouldShowRequestPermissionRationale(
+                    this,
+                    Manifest.permission.ACCESS_COARSE_LOCATION
+                )
+            ) {
+                findViewById<View>(R.id.content).apply {
+                    Snackbar.make(
+                        this,
+                        R.string.please_permission,
+                        Snackbar.LENGTH_INDEFINITE
+                    ).setAction(R.string.grant, ShowPermissionRequest()).show()
+                }
+
+            } else {
+                // No explanation needed, we can request the permission.
+                ActivityCompat.requestPermissions(
+                    this,
+                    arrayOf(Manifest.permission.ACCESS_COARSE_LOCATION),
+                    MY_PERMISSIONS_REQUEST_COURSE_LOCATION
+                )
+                Log.e(TAG, "No explanation needed, we can request the permission")
+            }
+        } else {
+            //permission granted
+            Log.e(TAG, "permission")
+            viewModel?.initUserLocation()
+        }
+    }
+
+    inner class ShowPermissionRequest : View.OnClickListener {
+
+        override fun onClick(v: View) {
+            // Code to undo the user's last action
+            ActivityCompat.requestPermissions(
+                this@MainActivity,
+                arrayOf(Manifest.permission.ACCESS_COARSE_LOCATION),
+                MY_PERMISSIONS_REQUEST_COURSE_LOCATION
+            )
         }
     }
 }

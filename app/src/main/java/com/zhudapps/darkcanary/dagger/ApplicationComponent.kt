@@ -3,6 +3,7 @@ package com.zhudapps.darkcanary.dagger
 import android.content.Context
 import com.zhudapps.darkcanary.DarkCanaryApp
 import com.zhudapps.darkcanary.dagger.activity.ActivityBuilder
+import com.zhudapps.darkcanary.main.MainActivityModule
 import dagger.BindsInstance
 import dagger.Component
 import dagger.android.AndroidInjector
