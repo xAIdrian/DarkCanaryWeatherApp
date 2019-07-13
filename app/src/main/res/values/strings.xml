@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">DarkCanary</string>
+    <string name="please_permission">App can only function properly with location permissions</string>
+    <string name="grant">Give Permission</string>
 </resources>

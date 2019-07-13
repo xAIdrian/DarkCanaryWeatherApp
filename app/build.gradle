@@ -45,4 +45,9 @@ dependencies {
     implementation "com.google.dagger:dagger-android-support:$rootProject.dagger2Version"
     kapt "com.google.dagger:dagger-compiler:$rootProject.dagger2Version"
     kapt "com.google.dagger:dagger-android-processor:$rootProject.dagger2Version"
+
+    //google services
+    //noinspection UseOfBundledGooglePlayServices
+    implementation 'com.google.android.gms:play-services:12.0.1'
+    implementation 'com.google.android.material:material:1.0.0'
 }

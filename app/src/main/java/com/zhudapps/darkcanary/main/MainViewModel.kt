@@ -1,22 +1,29 @@
 package com.zhudapps.darkcanary.main
 
+import android.annotation.SuppressLint
+import android.location.Location
 import android.util.Log
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.google.android.gms.location.FusedLocationProviderClient
+import javax.inject.Inject
 
 /**
  * Created by adrian mohnacs on 2019-07-12
- */
-class MainViewModel: ViewModel() {
+ */ //don't forget to add DataManager as parameter here?
+class MainViewModel @Inject constructor(val fusedLocationClient: FusedLocationProviderClient): ViewModel() {
 
     companion object {
-        const val TAG = "MainViewModel"
+        private const val TAG = "MainViewModel"
     }
 
+    //val lastKnowLocationLiveData = MutableLiveData<Location>()
+
+    @SuppressLint("MissingPermission") //supress permission check because we check in MainActivity (activity context is required)
     fun initUserLocation() {
-        Log.e(TAG, "yay! our viewmodel is functioning properly!")
-    }
-
-    fun getWeeksForecast() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        fusedLocationClient.lastLocation.addOnSuccessListener { location: Location? ->
+            // Got last known location. In some rare situations this can be null.
+            Log.e(TAG, location.toString())
+        }
     }
 }

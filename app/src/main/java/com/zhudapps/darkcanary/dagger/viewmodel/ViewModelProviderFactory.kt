@@ -1,4 +1,4 @@
-package com.zhudapps.darkcanary.dagger
+package com.zhudapps.darkcanary.dagger.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
@@ -7,16 +7,16 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 /**
- * Created by adrian mohnacs on 2019-07-01
+ * Created by adrian mohnacs on 2019-07-13
  */
 @Singleton
-class ViewModelProviderFactory @Inject constructor() : ViewModelProvider.NewInstanceFactory() {
+class ViewModelProviderFactory @Inject
+constructor(private val mainViewModel: MainViewModel) : ViewModelProvider.Factory {
 
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
 
         return when {
-            //clazz.isAssignableFrom(Foo.class) will be true whenever the class represented by the clazz object is a superclass or superinterface of Foo
-            modelClass.isAssignableFrom(MainViewModel::class.java) -> MainViewModel() as T
+            modelClass.isAssignableFrom(MainViewModel::class.java) -> mainViewModel as T
             else -> throw IllegalArgumentException("ViewModelProviderFactory Unknown ViewModel class: " + modelClass.name)
         }
     }
