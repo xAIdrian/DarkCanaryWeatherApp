@@ -61,10 +61,6 @@ class MainActivity : DaggerAppCompatActivity() {
                     Manifest.permission.ACCESS_COARSE_LOCATION
                 )
             ) {
-                Log.e(TAG, "show explanation")
-                // Show an explanation to the user *asynchronously* -- don't block
-                // this thread waiting for the user's response! After the user
-                // sees the explanation, try again to request the permission.
                 findViewById<View>(R.id.content).apply {
                     Snackbar.make(
                         this,
@@ -80,10 +76,6 @@ class MainActivity : DaggerAppCompatActivity() {
                     arrayOf(Manifest.permission.ACCESS_COARSE_LOCATION),
                     MY_PERMISSIONS_REQUEST_COURSE_LOCATION
                 )
-
-                // MY_PERMISSIONS_REQUEST_COURSE_LOCATION is an
-                // app-defined int constant. The callback method gets the
-                // result of the request.
                 Log.e(TAG, "No explanation needed, we can request the permission")
             }
         } else {
