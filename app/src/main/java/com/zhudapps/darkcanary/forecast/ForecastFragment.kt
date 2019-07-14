@@ -1,33 +1,47 @@
 package com.zhudapps.darkcanary.forecast
 
-import androidx.lifecycle.ViewModelProviders
 import android.os.Bundle
-import androidx.fragment.app.Fragment
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelProviders
 import com.zhudapps.darkcanary.R
+import com.zhudapps.darkcanary.main.MainViewModel
+import dagger.android.support.DaggerFragment
+import javax.inject.Inject
 
-class ForecastFragment : Fragment() {
+class ForecastFragment : DaggerFragment() {
 
     companion object {
-        fun newInstance() = ForecastFragment()
+        private const val TAG = "ForecastFragment"
     }
 
-    private lateinit var viewModel: ForecastViewModel
+    @Inject
+    lateinit var factory: ViewModelProvider.Factory
+
+    private var viewModel: ForecastViewModel? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.forecast_fragment, container, false)
+        val view = inflater.inflate(R.layout.forecast_fragment, container, false)
+
+
+
+        return view
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        viewModel = ViewModelProviders.of(this).get(ForecastViewModel::class.java)
-        // TODO: Use the ViewModel
+        if (::factory.isInitialized) {
+            val mainViewModel =  ViewModelProviders.of(this, factory).get(MainViewModel::class.java)
+            viewModel = ViewModelProviders.of(this, factory).get(ForecastViewModel::class.java)
+            viewModel?.mainViewModel = mainViewModel
+        }
     }
 
 }

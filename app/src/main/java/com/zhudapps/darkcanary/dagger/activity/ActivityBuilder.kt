@@ -1,5 +1,6 @@
 package com.zhudapps.darkcanary.dagger.activity
 
+import com.zhudapps.darkcanary.dagger.fragment.FragmentBuilder
 import com.zhudapps.darkcanary.main.MainActivity
 import com.zhudapps.darkcanary.main.MainActivityModule
 import dagger.Module
@@ -12,6 +13,9 @@ import dagger.android.ContributesAndroidInjector
 @Module
 abstract class ActivityBuilder {
 
-    @ContributesAndroidInjector(modules = [MainActivityModule::class])
+    @ContributesAndroidInjector(modules = [
+        MainActivityModule::class,
+        FragmentBuilder::class
+    ])
     abstract fun bindMainActivity(): MainActivity
 }

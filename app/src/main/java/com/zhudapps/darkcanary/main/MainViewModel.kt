@@ -19,11 +19,16 @@ class MainViewModel @Inject constructor(private val fusedLocationClient: FusedLo
 
     val lastKnowLocationLiveData = MutableLiveData<Location>()
 
+    init {
+        Log.e(TAG, "initialized")
+    }
+
     @SuppressLint("MissingPermission") //supress permission check because we check in MainActivity (activity context is required)
     fun initUserLocation() {
         fusedLocationClient.lastLocation.addOnSuccessListener { location: Location? ->
             // Got last known location. In some rare situations this can be null.
             Log.e(TAG, location.toString())
+            lastKnowLocationLiveData.value = location
         }
     }
 }

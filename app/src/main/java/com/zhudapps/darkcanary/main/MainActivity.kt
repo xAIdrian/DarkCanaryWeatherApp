@@ -11,6 +11,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import androidx.viewpager2.adapter.FragmentStateAdapter
@@ -36,16 +37,15 @@ class MainActivity : DaggerAppCompatActivity() {
     lateinit var factory: ViewModelProvider.Factory
 
     private var viewModel: MainViewModel? = null
-    private lateinit var mPager: ViewPager2
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.main_activity)
 
-        managePermissions()
-
         if (::factory.isInitialized) {
             viewModel = ViewModelProviders.of(this, factory).get(MainViewModel::class.java)
+
+            managePermissions()
         }
 
         setUpViewPager()
@@ -56,6 +56,14 @@ class MainActivity : DaggerAppCompatActivity() {
         with(pager) {
             val viewPagerAdapter = ViewPagerAdapter(supportFragmentManager, this@MainActivity.lifecycle)
             adapter = viewPagerAdapter
+        }
+    }
+
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+
+        when (requestCode) {
+            MY_PERMISSIONS_REQUEST_COURSE_LOCATION -> viewModel?.initUserLocation()
         }
     }
 
@@ -92,14 +100,6 @@ class MainActivity : DaggerAppCompatActivity() {
             //permission granted
             Log.e(TAG, "permission")
             viewModel?.initUserLocation()
-        }
-    }
-
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-
-        when (requestCode) {
-            MY_PERMISSIONS_REQUEST_COURSE_LOCATION -> viewModel?.initUserLocation()
         }
     }
 
