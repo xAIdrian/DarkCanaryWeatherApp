@@ -6,8 +6,8 @@ import androidx.lifecycle.ViewModelProvider
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.zhudapps.darkcanary.dagger.viewmodel.ViewModelProviderFactory
-import com.zhudapps.darkcanary.domain.DataManager
-import com.zhudapps.darkcanary.domain.IDataManager
+import com.zhudapps.darkcanary.domain.retrofit.DarkSkyEndpoint
+import com.zhudapps.darkcanary.domain.retrofit.RetrofitServiceBuilder
 import com.zhudapps.darkcanary.forecast.ForecastViewModel
 import com.zhudapps.darkcanary.main.MainViewModel
 import dagger.Module
@@ -42,7 +42,8 @@ class ApplicationModule {
     }
 
     @Provides
-    fun provideDataManager(): IDataManager {
-        return DataManager()
+    @Singleton
+    fun providesDarkSkyEndpoint(): DarkSkyEndpoint {
+        return RetrofitServiceBuilder.createService(DarkSkyEndpoint::class.java)
     }
 }

@@ -12,5 +12,5 @@ import dagger.android.ContributesAndroidInjector
 abstract class FragmentBuilder {
 
     @ContributesAndroidInjector(modules = [ ForecastFragmentModule::class ])
-    abstract fun provideMapFragment(): ForecastFragment
+    abstract fun provideForecastFragment(): ForecastFragment
 }
