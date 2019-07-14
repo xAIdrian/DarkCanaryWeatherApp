@@ -1,5 +1,6 @@
 package com.zhudapps.darkcanary.forecast
 
+import android.annotation.SuppressLint
 import android.location.Location
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
@@ -9,6 +10,8 @@ import com.zhudapps.darkcanary.main.MainViewModel
 import com.zhudapps.darkcanary.model.TimeMachineForecast
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
+import java.text.SimpleDateFormat
+import java.util.*
 import javax.inject.Inject
 
 class ForecastViewModel @Inject constructor(private val dataManager: DataManager) : ViewModel() {
@@ -22,55 +25,63 @@ class ForecastViewModel @Inject constructor(private val dataManager: DataManager
             field = value
             field?.let { setObservables(it) }
         }
-    var dayOffset: Int? = null
+    var daysToOffset: Int = -1
 
     val forcastLiveData = MutableLiveData<TimeMachineForecast>()
 
     private fun setObservables(mainViewModel: MainViewModel) {
         mainViewModel.lastKnownLocationLiveData.observeForever { location: Location? ->
             userLocation = location
-            getForecast()
+            getForecast(daysToOffset)
         }
     }
 
     private var userLocation: Location? = null
 
-    private var isReadyForUpdate = true
+    fun getForecast(offset: Int) {
 
-    fun getForecast() {
-        val forecastDate = dayOffset?.let { getForecastDate(it) }
-        //if we don't have a location prompt the viewModel for it and say we're ready for an update
-        if (isReadyForUpdate) {
-            if (userLocation != null) {
-                userLocation?.let {
-                    dataManager.getTimeMachineForecast(
-                        it.latitude,
-                        it.longitude,
-                        forecastDate ?: 0
-                    )
-                        .subscribeOn(Schedulers.io())
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe (
-                            { forecast ->
-                                forecast?.let { it ->
-                                    forcastLiveData.value = forecast
-                                }
-                            }, {
-                                //error state
-                                Log.e(TAG, it.message)
-                            })
-                }
-                isReadyForUpdate = false
-            } else {
-                isReadyForUpdate = true
-                mainViewModel?.initUserLocation()
-            }
+        if (offset != daysToOffset || daysToOffset == 0) { //daysOffset == 0 allowed to account for the initial call when we init location
+            daysToOffset = offset
+            val forecastDate = getForecastDate(System.currentTimeMillis(), daysToOffset)
+            getForecastWithLocation(forecastDate, userLocation)
         }
     }
 
-    private fun getForecastDate(dayOffset: Int): Long {
-        val getDays = dayOffset*24*60*60*1000L
+    @SuppressLint("CheckResult")
+    private fun getForecastWithLocation(forecastDate: Long, userLocation: Location?) {
+        if (userLocation != null) {
+            dataManager.getTimeMachineForecast(
+                userLocation.latitude,
+                userLocation.longitude,
+                forecastDate
+            )
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                    { forecast ->
+                        forecast?.let {
+                            forcastLiveData.value = it
+                        }
+                    }, {
+                        //error state
+                        Log.e(TAG, it.message ?: it.toString())
+                    })
+        } else {
+            mainViewModel?.initUserLocation()
+        }
+    }
 
-        return System.currentTimeMillis() + getDays
+    private fun getForecastDate(current: Long, dayOffset: Int): Long {
+        return if (dayOffset > 0)  {
+            val getDays = dayOffset * 24 * 60 * 60 * 1000L
+            (current + getDays) / 1000
+        }
+        else  { current / 1000 }
+    }
+
+    fun getDisplayDate(time: String): String {
+        val sdf = SimpleDateFormat("EEEE")
+        return sdf.format(Date(
+            getForecastDate(time.toLong(), daysToOffset)))
     }
 }

@@ -2,4 +2,9 @@
     <string name="app_name">DarkCanary</string>
     <string name="please_permission">App can only function properly with location permissions</string>
     <string name="grant">Give Permission</string>
+    <string name="high_temp">High Temperature</string>
+    <string name="low_temp">Low Temperature</string>
+    <string name="na">N/A</string>
+    <string name="view_details">View Details</string>
+    <string name="seven_days">Your 7 Day Forecast</string>
 </resources>
