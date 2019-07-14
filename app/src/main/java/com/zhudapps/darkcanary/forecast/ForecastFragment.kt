@@ -22,16 +22,13 @@ class ForecastFragment : DaggerFragment() {
     @Inject
     lateinit var factory: ViewModelProvider.Factory
 
-    private var viewModel: ForecastViewModel? = null
+    private lateinit var viewModel: ForecastViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.forecast_fragment, container, false)
-
-
-
         return view
     }
 
@@ -40,8 +37,13 @@ class ForecastFragment : DaggerFragment() {
         if (::factory.isInitialized) {
             val mainViewModel =  ViewModelProviders.of(this, factory).get(MainViewModel::class.java)
             viewModel = ViewModelProviders.of(this, factory).get(ForecastViewModel::class.java)
-            viewModel?.mainViewModel = mainViewModel
+
+            viewModel.mainViewModel = mainViewModel
+            viewModel.getForecast()
+
+            viewModel.forcastLiveData.observe(this, Observer {
+                Log.e(TAG, it.toString())
+            })
         }
     }
-
 }

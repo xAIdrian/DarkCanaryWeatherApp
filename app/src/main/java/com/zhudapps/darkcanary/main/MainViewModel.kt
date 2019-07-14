@@ -17,7 +17,7 @@ class MainViewModel @Inject constructor(private val fusedLocationClient: FusedLo
         private const val TAG = "MainViewModel"
     }
 
-    val lastKnowLocationLiveData = MutableLiveData<Location>()
+    val lastKnownLocationLiveData = MutableLiveData<Location>()
 
     init {
         Log.e(TAG, "initialized")
@@ -28,7 +28,7 @@ class MainViewModel @Inject constructor(private val fusedLocationClient: FusedLo
         fusedLocationClient.lastLocation.addOnSuccessListener { location: Location? ->
             // Got last known location. In some rare situations this can be null.
             Log.e(TAG, location.toString())
-            lastKnowLocationLiveData.value = location
+            lastKnownLocationLiveData.value = location
         }
     }
 }

@@ -47,7 +47,6 @@ class MainActivity : DaggerAppCompatActivity() {
 
             managePermissions()
         }
-
         setUpViewPager()
     }
 
