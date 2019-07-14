@@ -8,9 +8,9 @@ data class TimeMachineForecast(
   var offset: String,
   var timezone: String,
   var latitude: String,
-  var longitude: String
-//  @Embedded var daily: Daily,
-//  @Embedded var hourly: Hourly,
+  var longitude: String,
+  var daily: Daily,
+  var hourly: Hourly
 //  @PrimaryKey
 //  var uuid: UUID = UUID.randomUUID()
 )

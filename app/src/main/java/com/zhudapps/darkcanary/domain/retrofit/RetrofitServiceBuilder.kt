@@ -31,7 +31,7 @@ object RetrofitServiceBuilder {
      */
     fun <T> createService(endpointClass: Class<T>): T {
         if (!httpClient.interceptors().contains(logging)) {
-            //httpClient.addInterceptor(logging)
+            httpClient.addInterceptor(logging)
             builder.client(httpClient.build())
             retrofit = builder.build()
         }

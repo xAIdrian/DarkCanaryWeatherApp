@@ -1,7 +1,6 @@
 package com.zhudapps.darkcanary.forecast
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,7 +9,9 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import com.zhudapps.darkcanary.R
 import com.zhudapps.darkcanary.main.MainViewModel
+import com.zhudapps.darkcanary.model.WeatherIcon
 import dagger.android.support.DaggerFragment
+import kotlinx.android.synthetic.main.forecast_fragment.*
 import javax.inject.Inject
 
 class ForecastFragment : DaggerFragment() {
@@ -29,20 +30,10 @@ class ForecastFragment : DaggerFragment() {
             }
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-        arguments?.let {
-            dayOffset = it.getInt(FORECAST_DAY_OFFSET)
-        }
-    }
-
     @Inject
     lateinit var factory: ViewModelProvider.Factory
 
-    private var dayOffset = 0
     private lateinit var viewModel: ForecastViewModel
-
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -59,12 +50,44 @@ class ForecastFragment : DaggerFragment() {
             viewModel = ViewModelProviders.of(this, factory).get(ForecastViewModel::class.java)
 
             viewModel.mainViewModel = mainViewModel
-            viewModel.dayOffset = dayOffset
-
-            viewModel.getForecast()
+            arguments?.getInt(FORECAST_DAY_OFFSET)?.let {
+                //viewModel.daysToOffset = it
+                viewModel.getForecast(it)
+            }
 
             viewModel.forcastLiveData.observe(this, Observer {
-                Log.e(TAG, it.toString())
+
+                if (!it.daily.data.isNullOrEmpty()) {
+
+                    progress_spinner.visibility = View.GONE
+                    fragment_content.visibility = View.VISIBLE
+
+                    val daily = it.daily.data[0]
+
+                    //date_title.text = viewModel.getDisplayDate(daily.time)
+
+                    icon_image_view.setImageResource(
+                        when (daily.icon) {
+                            WeatherIcon.CLEAR_DAY -> WeatherIcon.CLEAR_DAY.value
+                            WeatherIcon.CLEAR_NIGHT -> WeatherIcon.CLEAR_NIGHT.value
+                            WeatherIcon.CLOUDY -> WeatherIcon.CLOUDY.value
+                            WeatherIcon.FOG -> WeatherIcon.FOG.value
+                            WeatherIcon.HAIL -> WeatherIcon.HAIL.value
+                            WeatherIcon.PARTLY_CLOUDY_DAY -> WeatherIcon.PARTLY_CLOUDY_DAY.value
+                            WeatherIcon.PARTLY_CLOUDY_NIGHT -> WeatherIcon.PARTLY_CLOUDY_NIGHT.value
+                            WeatherIcon.RAIN -> WeatherIcon.RAIN.value
+                            WeatherIcon.SLEET -> WeatherIcon.SLEET.value
+                            WeatherIcon.SNOW -> WeatherIcon.SNOW.value
+                            WeatherIcon.THUNDERSTORM -> WeatherIcon.THUNDERSTORM.value
+                            WeatherIcon.TORNADO -> WeatherIcon.TORNADO.value
+                            WeatherIcon.WIND -> WeatherIcon.WIND.value
+                        }
+                    )
+                    summary_title.text = daily.summary
+                    high_temp.text = daily.apparentTemperatureHigh
+                    low_temp.text = daily.apparentTemperatureLow
+
+                }
             })
         }
     }
