@@ -115,8 +115,8 @@ class MainActivity : DaggerAppCompatActivity() {
     }
 
     private inner class ViewPagerAdapter(fm: FragmentManager, lifeCycleFromActivity: Lifecycle) : FragmentStateAdapter(fm, lifeCycleFromActivity) {
-        override fun getItemCount(): Int = 4
+        override fun getItemCount(): Int = 7
 
-        override fun createFragment(position: Int): Fragment  = ForecastFragment()
+        override fun createFragment(position: Int): Fragment  = ForecastFragment.newInstance(position)
     }
 }

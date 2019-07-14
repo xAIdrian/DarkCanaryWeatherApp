@@ -17,12 +17,32 @@ class ForecastFragment : DaggerFragment() {
 
     companion object {
         private const val TAG = "ForecastFragment"
+
+        const val FORECAST_DAY_OFFSET = "forecast_day_offset"
+
+        @JvmStatic
+        fun newInstance(dayOffset: Int) =
+            ForecastFragment().apply {
+                arguments = Bundle().apply {
+                    putInt(FORECAST_DAY_OFFSET, dayOffset)
+                }
+            }
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        arguments?.let {
+            dayOffset = it.getInt(FORECAST_DAY_OFFSET)
+        }
     }
 
     @Inject
     lateinit var factory: ViewModelProvider.Factory
 
+    private var dayOffset = 0
     private lateinit var viewModel: ForecastViewModel
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -35,10 +55,12 @@ class ForecastFragment : DaggerFragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         if (::factory.isInitialized) {
-            val mainViewModel =  ViewModelProviders.of(this, factory).get(MainViewModel::class.java)
+            val mainViewModel = activity?.let { ViewModelProviders.of(it, factory).get(MainViewModel::class.java) }
             viewModel = ViewModelProviders.of(this, factory).get(ForecastViewModel::class.java)
 
             viewModel.mainViewModel = mainViewModel
+            viewModel.dayOffset = dayOffset
+
             viewModel.getForecast()
 
             viewModel.forcastLiveData.observe(this, Observer {

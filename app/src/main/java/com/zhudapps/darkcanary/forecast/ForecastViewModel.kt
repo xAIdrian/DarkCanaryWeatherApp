@@ -22,6 +22,8 @@ class ForecastViewModel @Inject constructor(private val dataManager: DataManager
             field = value
             field?.let { setObservables(it) }
         }
+    var dayOffset: Int? = null
+
     val forcastLiveData = MutableLiveData<TimeMachineForecast>()
 
     private fun setObservables(mainViewModel: MainViewModel) {
@@ -36,6 +38,7 @@ class ForecastViewModel @Inject constructor(private val dataManager: DataManager
     private var isReadyForUpdate = true
 
     fun getForecast() {
+        val forecastDate = dayOffset?.let { getForecastDate(it) }
         //if we don't have a location prompt the viewModel for it and say we're ready for an update
         if (isReadyForUpdate) {
             if (userLocation != null) {
@@ -43,7 +46,7 @@ class ForecastViewModel @Inject constructor(private val dataManager: DataManager
                     dataManager.getTimeMachineForecast(
                         it.latitude,
                         it.longitude,
-                        System.currentTimeMillis() / 1000
+                        forecastDate ?: 0
                     )
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
@@ -63,5 +66,11 @@ class ForecastViewModel @Inject constructor(private val dataManager: DataManager
                 mainViewModel?.initUserLocation()
             }
         }
+    }
+
+    private fun getForecastDate(dayOffset: Int): Long {
+        val getDays = dayOffset*24*60*60*1000L
+
+        return System.currentTimeMillis() + getDays
     }
 }
