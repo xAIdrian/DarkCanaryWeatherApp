@@ -45,3 +45,5 @@ I chose to use room becuase it is **highly recommended** by the team at Google. 
 #### Where's the DataBinding?
 
 For such a small application on a limited timeline I decided not to use DataBinding as it would increase the complexity of the application "somewhat" and I invisioned several occurances where we would have logic in our XML like with displaying specific images from enums.  This could be handled with two-way binding and `@InverseBindingAdapter`s but I felt like tackling these problems were outside of the scope of this application.
+
+### Please see our [Issues](https://github.com/amohnacs15/DarkCanaryWeatherApp/issues) page for what still needs to be completed
