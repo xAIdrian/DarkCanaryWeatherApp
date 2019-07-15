@@ -4,6 +4,7 @@ import android.content.Context
 import com.zhudapps.darkcanary.DarkCanaryApp
 import com.zhudapps.darkcanary.dagger.activity.ActivityBuilder
 import com.zhudapps.darkcanary.dagger.fragment.FragmentBuilder
+import com.zhudapps.darkcanary.domain.room.RoomModule
 import dagger.BindsInstance
 import dagger.Component
 import dagger.android.AndroidInjector
@@ -18,7 +19,8 @@ import javax.inject.Singleton
     AndroidSupportInjectionModule::class,
     ApplicationModule::class,
     ActivityBuilder::class,
-    FragmentBuilder::class
+    FragmentBuilder::class,
+    RoomModule::class
 ])
 interface ApplicationComponent : AndroidInjector<DarkCanaryApp> {
 
