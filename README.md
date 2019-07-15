@@ -1,4 +1,4 @@
-# DarkCanaryWeatherApp
+# Dark Canary Weather App
 
 **Dark Canary** is an Android client that displays the week's forecast using the *Dark Sky API*.  The data requested using Retrofit and RxJava is stored locally using Room and made available offline.  A user is able to click into the daily forecast and view an hourly breakdown of the day.
 
