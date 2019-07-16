@@ -10,8 +10,6 @@ Becuase of the need for our user's location to be available throughout the appli
 
 We are making our domain responsibilities using the repository pattern which is another abstraction of our data that the ViewModel can call and does not need to know how or where it is getting that data from.  This again provides a loose coupling between the business and domain logic.  The repository and datamanagers are accessed via interface to ensure the contract and allow for additional implementations from different sources in the future.
 
-(We have a `DataManager` exposed to our ViewModel in case the need ever arises that we are pulling from multiple repositories and unique combinations of data are required both for caching and display purposes. This is also where we would like to store our logic for caching, timeouts, and the updating of "stale" data in the future)
-
 Improves :
 - Testability
 - Maintainability
