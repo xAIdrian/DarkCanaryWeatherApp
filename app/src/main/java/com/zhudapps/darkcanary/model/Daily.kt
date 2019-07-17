@@ -9,7 +9,6 @@ import androidx.room.PrimaryKey
 import com.zhudapps.darkcanary.domain.room.ForecastDatabase.Companion.DAILIES
 import com.zhudapps.darkcanary.domain.room.ForecastDatabase.Companion.ID
 import com.zhudapps.darkcanary.domain.room.ForecastDatabase.Companion.TIME_MACHINE_FORECAST_ID
-import java.util.*
 import kotlin.collections.ArrayList
 
 /**
@@ -22,16 +21,17 @@ import kotlin.collections.ArrayList
             entity = TimeMachineForecast::class,
             parentColumns = arrayOf(ID),
             childColumns = arrayOf(TIME_MACHINE_FORECAST_ID),
-            onUpdate = CASCADE
+            onUpdate = CASCADE,
+            onDelete = CASCADE
         )
     ]
 )
 data class Daily(
-    var data: ArrayList<Forecast>,
-
     @PrimaryKey
     @NonNull
-    var id: UUID = UUID.randomUUID(),
+    var dayid: String = "",
     @ColumnInfo(name = TIME_MACHINE_FORECAST_ID)
-    val forecastId: UUID = UUID(0L, 0L)
+    val forecastId: String = "",
+
+    var forecasts: ArrayList<Forecast>
 )

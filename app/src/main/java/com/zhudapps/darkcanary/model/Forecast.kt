@@ -7,10 +7,8 @@ import androidx.room.ForeignKey
 import androidx.room.ForeignKey.CASCADE
 import androidx.room.PrimaryKey
 import com.zhudapps.darkcanary.domain.room.ForecastDatabase.Companion.DAILY_ID
+import com.zhudapps.darkcanary.domain.room.ForecastDatabase.Companion.DAY_ID
 import com.zhudapps.darkcanary.domain.room.ForecastDatabase.Companion.FORECASTS
-import com.zhudapps.darkcanary.domain.room.ForecastDatabase.Companion.HOURLY_ID
-import com.zhudapps.darkcanary.domain.room.ForecastDatabase.Companion.ID
-import java.util.*
 
 /**
  * Created by adrian mohnacs on 2019-07-13
@@ -19,20 +17,21 @@ import java.util.*
     tableName = FORECASTS,
     foreignKeys = [
         ForeignKey(
-            entity = Hourly::class,
-            parentColumns = arrayOf(ID),
-            childColumns = arrayOf(HOURLY_ID),
-            onUpdate = CASCADE
-        ),
-        ForeignKey(
             entity = Daily::class,
-            parentColumns = arrayOf(ID),
+            parentColumns = arrayOf(DAY_ID),
             childColumns = arrayOf(DAILY_ID),
-            onUpdate = CASCADE
+            onUpdate = CASCADE,
+            onDelete = CASCADE
         )
     ]
 )
 data class Forecast(
+    @PrimaryKey
+    @NonNull
+    var id: String = "",
+    @ColumnInfo(name = DAILY_ID)
+    var dailyId: String = "",
+
     var summary: String,
     var precipProbability: String,
     var visibility: String,
@@ -51,13 +50,5 @@ data class Forecast(
     var humidity: String,
     var time: String,
     var windSpeed: String,
-    var uvIndex: String,
-
-    @PrimaryKey
-    @NonNull
-    var id: UUID = UUID.randomUUID(),
-    @ColumnInfo(name = "hourly_id")
-    var hourlyId: UUID = UUID(0L, 0L),
-    @ColumnInfo(name = "daily_id")
-    var dailyId: UUID = UUID(0L, 0L)
+    var uvIndex: String
 )

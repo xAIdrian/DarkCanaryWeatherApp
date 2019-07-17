@@ -1,5 +1,7 @@
 package com.zhudapps.darkcanary.forecast
 
+import android.content.Context
+import android.net.ConnectivityManager
 import com.zhudapps.darkcanary.domain.ForecastRepository
 import dagger.Module
 import dagger.Provides
@@ -13,7 +15,7 @@ class ForecastFragmentModule {
 
     @Provides
     @Singleton
-    fun provideForecastViewModel(repo: ForecastRepository): ForecastViewModel {
-        return ForecastViewModel(repo)
+    fun provideForecastViewModel(repo: ForecastRepository, connectivityManager: ConnectivityManager): ForecastViewModel {
+        return ForecastViewModel(repo, connectivityManager)
     }
 }

@@ -1,9 +1,8 @@
 package com.zhudapps.darkcanary.domain.room
 
-import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.OnConflictStrategy
-import androidx.room.Query
+import androidx.room.*
+import com.zhudapps.darkcanary.domain.room.ForecastDatabase.Companion.ID
+import com.zhudapps.darkcanary.domain.room.ForecastDatabase.Companion.TIME_MACHINE_FORECASTS
 import com.zhudapps.darkcanary.model.Daily
 import com.zhudapps.darkcanary.model.Forecast
 import com.zhudapps.darkcanary.model.Hourly
@@ -16,19 +15,11 @@ import com.zhudapps.darkcanary.model.TimeMachineForecast
 interface ForecastDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertTimeMachineForecasts(timeMachineForecasts: List<TimeMachineForecast>)
+    suspend fun insertTimeMachineForecasts(timeMachineForecasts: TimeMachineForecast)
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertHourly(hourly: Hourly)
+    @Query("SELECT * FROM $TIME_MACHINE_FORECASTS WHERE $ID = :forecastId")
+    suspend fun getTimeMachineForecasts(forecastId: String): TimeMachineForecast
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertDaily(daily: Daily)
-
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertForecasts(vararg forecasts: List<Forecast>)
-
-    @Query("SELECT * FROM time_machine_forecasts")
-    suspend fun getTimeMachineForecasts(): ArrayList<TimeMachineForecast>
-
-
+    @Query("DELETE FROM $TIME_MACHINE_FORECASTS")
+    suspend fun clearDatabase()
 }

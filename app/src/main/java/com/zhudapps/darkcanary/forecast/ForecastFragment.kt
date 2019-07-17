@@ -55,14 +55,14 @@ class ForecastFragment : DaggerFragment() {
                 viewModel.getForecast(it)
             }
 
-            viewModel.forcastLiveData.observe(this, Observer {
+            viewModel.forecastLiveData.observe(this, Observer {
 
-                if (!it.daily.data.isNullOrEmpty()) {
+                if (!it.daily.forecasts.isNullOrEmpty()) {
 
                     progress_spinner.visibility = View.GONE
                     fragment_content.visibility = View.VISIBLE
 
-                    val daily = it.daily.data[0]
+                    val daily = it.daily.forecasts[0]
 
                     //date_title.text = viewModel.getDisplayDate(daily.time)
 

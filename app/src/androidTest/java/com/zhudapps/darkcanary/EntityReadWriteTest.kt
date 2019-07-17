@@ -6,7 +6,8 @@ import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.zhudapps.darkcanary.domain.room.ForecastDao
 import com.zhudapps.darkcanary.domain.room.ForecastDatabase
-import junit.framework.Assert.assertTrue
+import junit.framework.TestCase.*
+import kotlinx.coroutines.runBlocking
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
@@ -24,7 +25,7 @@ class EntityReadWriteTest {
 
         database = Room.inMemoryDatabaseBuilder(
             context,
-            ForecastDatabase::class.java //todo 2019-07-16 this needs to be changed to an in memory database to make it more hermetic
+            ForecastDatabase::class.java //todo 2019-07-16 this needs to be changed to an in memory test database to make it more hermetic
         ).build()
         forecastDao = database.forecastDao()
     }
@@ -36,12 +37,49 @@ class EntityReadWriteTest {
     }
 
     @Test
-    @Throws(Exception::class) //todo what's our specific exception???
-    suspend fun writeAndReadTimeMachineForecastInList() {
-        val testForecasts = TestUtil.createTimeMachineForecasts(3)
-        forecastDao.insertTimeMachineForecasts(testForecasts)
+    fun writeAndReadTimeMachineForecastInList() {
+        val testForecasts = TestUtil.createTimeMachineForecasts(0)
 
-        val timeMachines = forecastDao.getTimeMachineForecasts()
-        assertTrue(timeMachines.size == 3)
+        runBlocking {
+            forecastDao.insertTimeMachineForecasts(testForecasts)
+        }
+
+        val timeMachines = runBlocking {
+            forecastDao.getTimeMachineForecasts("0")
+        }
+        assertTrue(timeMachines != null)
+    }
+
+    @Test
+    fun writeTimeMachineForcastAndReadForecasts() {
+        val testForecasts = TestUtil.createTimeMachineForecasts(0)
+        runBlocking {
+            forecastDao.insertTimeMachineForecasts(testForecasts)
+        }
+
+        val timeMachines = runBlocking {
+            forecastDao.getTimeMachineForecasts("0")
+        }
+
+        val actual = timeMachines.daily.forecasts
+        assertTrue(actual.size == 1)
+        assertEquals(TestUtil.testDailyForecast, timeMachines.daily)
+    }
+
+    @Test
+    fun clearTimeMachineForecasts() {
+        val testForecasts = TestUtil.createTimeMachineForecasts(0)
+        runBlocking {
+            forecastDao.insertTimeMachineForecasts(testForecasts)
+        }
+
+        runBlocking {
+            forecastDao.clearDatabase()
+        }
+
+        val timeMachines = runBlocking {
+            forecastDao.getTimeMachineForecasts("0")
+        }
+        assertNull(timeMachines)
     }
 }

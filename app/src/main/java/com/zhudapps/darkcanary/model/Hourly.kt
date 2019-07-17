@@ -33,8 +33,8 @@ data class Hourly(
 
     @PrimaryKey
     @NonNull
-    var id: UUID = UUID.randomUUID(),
+    var id: String = UUID.randomUUID().toString(),
     @ColumnInfo(name = TIME_MACHINE_FORECAST_ID)
-    val forecastId: UUID = UUID(0L, 0L)
+    val forecastId: String = ""
 )
 
