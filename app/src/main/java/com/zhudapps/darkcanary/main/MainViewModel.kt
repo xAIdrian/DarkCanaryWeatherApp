@@ -10,7 +10,7 @@ import javax.inject.Inject
 
 /**
  * Created by adrian mohnacs on 2019-07-12
- */ //don't forget to add DataManager as parameter here?
+ */
 class MainViewModel @Inject constructor(private val fusedLocationClient: FusedLocationProviderClient): ViewModel() {
 
     companion object {

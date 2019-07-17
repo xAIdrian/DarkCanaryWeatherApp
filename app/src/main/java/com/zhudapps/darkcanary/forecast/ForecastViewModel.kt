@@ -5,7 +5,7 @@ import android.location.Location
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.zhudapps.darkcanary.domain.DataManager
+import com.zhudapps.darkcanary.domain.ForecastRepository
 import com.zhudapps.darkcanary.main.MainViewModel
 import com.zhudapps.darkcanary.model.TimeMachineForecast
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -14,7 +14,7 @@ import java.text.SimpleDateFormat
 import java.util.*
 import javax.inject.Inject
 
-class ForecastViewModel @Inject constructor(private val dataManager: DataManager) : ViewModel() {
+class ForecastViewModel @Inject constructor(private val forecastRepository: ForecastRepository) : ViewModel() {
 
     companion object {
         private const val TAG = "ForecastViewModel"
@@ -50,7 +50,7 @@ class ForecastViewModel @Inject constructor(private val dataManager: DataManager
     @SuppressLint("CheckResult")
     private fun getForecastWithLocation(forecastDate: Long, userLocation: Location?) {
         if (userLocation != null) {
-            dataManager.getTimeMachineForecast(
+            forecastRepository.fetchForecast(
                 userLocation.latitude,
                 userLocation.longitude,
                 forecastDate
@@ -72,16 +72,20 @@ class ForecastViewModel @Inject constructor(private val dataManager: DataManager
     }
 
     private fun getForecastDate(current: Long, dayOffset: Int): Long {
-        return if (dayOffset > 0)  {
+        return if (dayOffset > 0) {
             val getDays = dayOffset * 24 * 60 * 60 * 1000L
             (current + getDays) / 1000
+        } else {
+            current / 1000
         }
-        else  { current / 1000 }
     }
 
     fun getDisplayDate(time: String): String {
         val sdf = SimpleDateFormat("EEEE")
-        return sdf.format(Date(
-            getForecastDate(time.toLong(), daysToOffset)))
+        return sdf.format(
+            Date(
+                getForecastDate(time.toLong(), daysToOffset)
+            )
+        )
     }
 }

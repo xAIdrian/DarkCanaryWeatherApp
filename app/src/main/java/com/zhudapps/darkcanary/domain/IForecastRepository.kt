@@ -8,10 +8,5 @@ import io.reactivex.Single
  */
 interface IForecastRepository {
 
-    fun fetchForecast(
-        key: String,
-        latitude: Double,
-        longitude: Double,
-        time: Long
-    ): Single<TimeMachineForecast>
+    fun fetchForecast(latitude: Double, longitude: Double, time: Long): Single<TimeMachineForecast>
 }

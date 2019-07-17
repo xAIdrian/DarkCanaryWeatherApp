@@ -6,25 +6,29 @@ import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.ForeignKey.CASCADE
 import androidx.room.PrimaryKey
+import com.zhudapps.darkcanary.domain.room.ForecastDatabase.Companion.DAILY_ID
+import com.zhudapps.darkcanary.domain.room.ForecastDatabase.Companion.FORECASTS
+import com.zhudapps.darkcanary.domain.room.ForecastDatabase.Companion.HOURLY_ID
+import com.zhudapps.darkcanary.domain.room.ForecastDatabase.Companion.ID
 import java.util.*
 
 /**
  * Created by adrian mohnacs on 2019-07-13
  */
 @Entity(
-    tableName = "forecasts",
+    tableName = FORECASTS,
     foreignKeys = [
         ForeignKey(
             entity = Hourly::class,
-            parentColumns = arrayOf("id"),
-            childColumns = arrayOf("hourly_id"),
-            onDelete = CASCADE
+            parentColumns = arrayOf(ID),
+            childColumns = arrayOf(HOURLY_ID),
+            onUpdate = CASCADE
         ),
         ForeignKey(
             entity = Daily::class,
-            parentColumns = arrayOf("id"),
-            childColumns = arrayOf("daily_id"),
-            onDelete = CASCADE
+            parentColumns = arrayOf(ID),
+            childColumns = arrayOf(DAILY_ID),
+            onUpdate = CASCADE
         )
     ]
 )
@@ -53,7 +57,7 @@ data class Forecast(
     @NonNull
     var id: UUID = UUID.randomUUID(),
     @ColumnInfo(name = "hourly_id")
-    var hourlyId: UUID,
+    var hourlyId: UUID = UUID(0L, 0L),
     @ColumnInfo(name = "daily_id")
-    var dailyId: UUID
+    var dailyId: UUID = UUID(0L, 0L)
 )
