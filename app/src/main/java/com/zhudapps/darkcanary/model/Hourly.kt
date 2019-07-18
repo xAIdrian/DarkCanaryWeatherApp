@@ -31,10 +31,10 @@ data class Hourly(
     var data: ArrayList<Forecast>,
     var icon: String,
 
-    @PrimaryKey
+    @PrimaryKey(autoGenerate = true)
     @NonNull
-    var id: String = UUID.randomUUID().toString(),
+    var id: Int,
     @ColumnInfo(name = TIME_MACHINE_FORECAST_ID)
-    val forecastId: String = ""
+    val forecastId: Int
 )
 

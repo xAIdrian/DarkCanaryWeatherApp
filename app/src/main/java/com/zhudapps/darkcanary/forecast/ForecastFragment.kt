@@ -51,7 +51,7 @@ class ForecastFragment : DaggerFragment() {
 
             viewModel.mainViewModel = mainViewModel
             arguments?.getInt(FORECAST_DAY_OFFSET)?.let {
-                //viewModel.daysToOffset = it
+                //viewModel.forecastIndex = it
                 viewModel.getForecast(it)
             }
 

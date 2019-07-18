@@ -12,9 +12,9 @@ import java.util.*
  */
 @Entity(tableName = TIME_MACHINE_FORECASTS)
 data class TimeMachineForecast(
-  @PrimaryKey
+  @PrimaryKey(autoGenerate = true)
   @NonNull
-  var id: String = "",
+  var id: Int,
 
   var offset: String,
   var timezone: String,

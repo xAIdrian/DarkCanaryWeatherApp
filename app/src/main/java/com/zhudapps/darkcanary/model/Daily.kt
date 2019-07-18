@@ -6,6 +6,7 @@ import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.ForeignKey.CASCADE
 import androidx.room.PrimaryKey
+import com.google.gson.annotations.SerializedName
 import com.zhudapps.darkcanary.domain.room.ForecastDatabase.Companion.DAILIES
 import com.zhudapps.darkcanary.domain.room.ForecastDatabase.Companion.ID
 import com.zhudapps.darkcanary.domain.room.ForecastDatabase.Companion.TIME_MACHINE_FORECAST_ID
@@ -27,11 +28,11 @@ import kotlin.collections.ArrayList
     ]
 )
 data class Daily(
-    @PrimaryKey
-    @NonNull
-    var dayid: String = "",
+    @PrimaryKey(autoGenerate = true)
+    var dayid: Int,
     @ColumnInfo(name = TIME_MACHINE_FORECAST_ID)
-    val forecastId: String = "",
+    var forecastId: Int,
 
+    @SerializedName("data")
     var forecasts: ArrayList<Forecast>
 )

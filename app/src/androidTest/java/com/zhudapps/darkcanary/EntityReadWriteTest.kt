@@ -45,25 +45,9 @@ class EntityReadWriteTest {
         }
 
         val timeMachines = runBlocking {
-            forecastDao.getTimeMachineForecasts("0")
+            forecastDao.getTimeMachineForecasts(0)
         }
         assertTrue(timeMachines != null)
-    }
-
-    @Test
-    fun writeTimeMachineForcastAndReadForecasts() {
-        val testForecasts = TestUtil.createTimeMachineForecasts(0)
-        runBlocking {
-            forecastDao.insertTimeMachineForecasts(testForecasts)
-        }
-
-        val timeMachines = runBlocking {
-            forecastDao.getTimeMachineForecasts("0")
-        }
-
-        val actual = timeMachines.daily.forecasts
-        assertTrue(actual.size == 1)
-        assertEquals(TestUtil.testDailyForecast, timeMachines.daily)
     }
 
     @Test
@@ -78,7 +62,7 @@ class EntityReadWriteTest {
         }
 
         val timeMachines = runBlocking {
-            forecastDao.getTimeMachineForecasts("0")
+            forecastDao.getTimeMachineForecasts(0)
         }
         assertNull(timeMachines)
     }

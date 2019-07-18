@@ -13,10 +13,10 @@ import retrofit2.http.Path
 interface DarkSkyEndpoint {
 
     @GET("/forecast/{key}/{latitude},{longitude},{time}")
-    suspend fun getTimeMachineForecast(
+    fun getTimeMachineForecast(
         @Path("key") key: String,
         @Path("latitude") latitude: Double,
         @Path("longitude") longitude: Double,
         @Path("time") time: Long
-    ): Response<TimeMachineForecast>
+    ): Single<TimeMachineForecast>
 }

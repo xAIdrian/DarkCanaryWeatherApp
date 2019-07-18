@@ -22,7 +22,7 @@ object Converters { //declaring as object ensures Singleton
 
     @TypeConverter
     @JvmStatic
-    fun fromForecastArrayListToString(list: ArrayList<Forecast>): String {
+    fun fromForecastArrayListToString(list: ArrayList<Forecast>?): String {
         val gson = Gson()
         return gson.toJson(list)
     }

@@ -9,6 +9,8 @@ import androidx.lifecycle.ViewModel
 import com.zhudapps.darkcanary.domain.ForecastRepository
 import com.zhudapps.darkcanary.main.MainViewModel
 import com.zhudapps.darkcanary.model.TimeMachineForecast
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.schedulers.Schedulers
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -30,14 +32,14 @@ class ForecastViewModel @Inject constructor(
             field = value
             field?.let { setObservables(it) }
         }
-    var daysToOffset: Int = -1
+    var forecastIndex: Int = -1
 
     val forecastLiveData = MutableLiveData<TimeMachineForecast>()
 
     private fun setObservables(mainViewModel: MainViewModel) {
         mainViewModel.lastKnownLocationLiveData.observeForever { location: Location? ->
             userLocation = location
-            getForecast(daysToOffset)
+            getForecast(forecastIndex)
         }
     }
 
@@ -45,9 +47,9 @@ class ForecastViewModel @Inject constructor(
 
     fun getForecast(offset: Int) {
 
-        if (offset != daysToOffset || daysToOffset == 0) { //daysOffset == 0 allowed to account for the initial call when we init location
-            daysToOffset = offset
-            val forecastDate = getForecastDate(System.currentTimeMillis(), daysToOffset)
+        if (offset != forecastIndex || forecastIndex == 0) { //daysOffset == 0 allowed to account for the initial call when we init location
+            forecastIndex = offset
+            val forecastDate = getForecastDate(System.currentTimeMillis(), forecastIndex)
             getForecastWithLocation(forecastDate, userLocation)
         }
     }
@@ -58,17 +60,27 @@ class ForecastViewModel @Inject constructor(
 
             GlobalScope.launch(Dispatchers.IO) {
                 try {
-                    val response = forecastRepository.fetchForecast(
+                    val connection = isInternetConnected()
+                    forecastRepository.fetchForecast(
                         userLocation.latitude,
                         userLocation.longitude,
                         forecastDate,
-                        isInternetConnected()
-                    )
-                    if (response != null) forecastLiveData.value = response
-                    else Log.e(TAG, "error retrieving our forecasts")
+                        connection,
+                        forecastIndex
+                    ).subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(
+                            { forecast ->
+                                forecast?.let {
+                                    forecastLiveData.value = it
+                                }
+                            }, {
+                                //error state
+                                Log.e(TAG, it.message ?: it.toString())
+                            })
 
                 } catch (e: Exception) {
-                    Log.e(TAG, "retrfofit error")
+                    Log.e(TAG, e.message ?: "e is null")
                 }
             }
         } else {
@@ -95,7 +107,7 @@ class ForecastViewModel @Inject constructor(
         val sdf = SimpleDateFormat("EEEE")
         return sdf.format(
             Date(
-                getForecastDate(time.toLong(), daysToOffset)
+                getForecastDate(time.toLong(), forecastIndex)
             )
         )
     }

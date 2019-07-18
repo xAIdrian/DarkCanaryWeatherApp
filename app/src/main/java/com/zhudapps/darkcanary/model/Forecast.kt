@@ -26,11 +26,11 @@ import com.zhudapps.darkcanary.domain.room.ForecastDatabase.Companion.FORECASTS
     ]
 )
 data class Forecast(
-    @PrimaryKey
+    @PrimaryKey(autoGenerate = true)
     @NonNull
-    var id: String = "",
+    var id: Int,
     @ColumnInfo(name = DAILY_ID)
-    var dailyId: String = "",
+    var dailyId: Int,
 
     var summary: String,
     var precipProbability: String,
