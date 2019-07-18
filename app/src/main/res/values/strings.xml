@@ -7,4 +7,5 @@
     <string name="na">N/A</string>
     <string name="view_details">View Details</string>
     <string name="seven_days">Your 7 Day Forecast</string>
+    <string name="forecast_database">forecast_room_database</string>
 </resources>

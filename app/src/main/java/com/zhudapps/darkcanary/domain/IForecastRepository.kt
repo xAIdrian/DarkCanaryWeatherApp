@@ -9,9 +9,10 @@ import io.reactivex.Single
 interface IForecastRepository {
 
     fun fetchForecast(
-        key: String,
         latitude: Double,
         longitude: Double,
-        time: Long
+        time: Long,
+        isConnectedToInternet: Boolean,
+        id: Int
     ): Single<TimeMachineForecast>
 }

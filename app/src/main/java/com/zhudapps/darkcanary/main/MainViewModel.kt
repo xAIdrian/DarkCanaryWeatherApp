@@ -10,7 +10,7 @@ import javax.inject.Inject
 
 /**
  * Created by adrian mohnacs on 2019-07-12
- */ //don't forget to add DataManager as parameter here?
+ */
 class MainViewModel @Inject constructor(private val fusedLocationClient: FusedLocationProviderClient): ViewModel() {
 
     companion object {
@@ -18,13 +18,18 @@ class MainViewModel @Inject constructor(private val fusedLocationClient: FusedLo
     }
 
     val lastKnownLocationLiveData = MutableLiveData<Location>()
+    var killLooper = 0
 
     @SuppressLint("MissingPermission") //supress permission check because we check in MainActivity (activity context is required)
     fun initUserLocation() {
         fusedLocationClient.lastLocation.addOnSuccessListener { location: Location? ->
             // Got last known location. In some rare situations this can be null.
-            Log.e(TAG, location.toString())
-            lastKnownLocationLiveData.value = location
+            //if we are in a situration where location is null our observer pattern will cause a loop. so this counter deals with that
+            if (killLooper <= 7) {
+                killLooper++
+                Log.e(TAG, location.toString())
+                lastKnownLocationLiveData.value = location
+            }
         }
     }
 }
