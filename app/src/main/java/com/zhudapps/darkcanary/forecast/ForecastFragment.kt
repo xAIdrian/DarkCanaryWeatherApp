@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
@@ -55,7 +56,11 @@ class ForecastFragment : DaggerFragment() {
                 viewModel.getForecast(it)
             }
 
-            viewModel.forecastLiveData.observe(this, Observer {
+            details_button.setOnClickListener {
+                Toast.makeText(activity, "Under Construction", Toast.LENGTH_SHORT).show()
+            }
+
+            viewModel.forcastLiveData.observe(this, Observer {
 
                 if (!it.daily.forecasts.isNullOrEmpty()) {
 
