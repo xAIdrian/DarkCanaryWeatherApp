@@ -60,7 +60,7 @@ class ForecastFragment : DaggerFragment() {
                 Toast.makeText(activity, "Under Construction", Toast.LENGTH_SHORT).show()
             }
 
-            viewModel.forcastLiveData.observe(this, Observer {
+            viewModel.forecastLiveData.observe(this, Observer {
 
                 if (!it.daily.forecasts.isNullOrEmpty()) {
 
