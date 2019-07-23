@@ -1,8 +1,10 @@
 package com.zhudapps.darkcanary.model
 
 import androidx.annotation.NonNull
+import androidx.annotation.Nullable
 import androidx.room.Embedded
 import androidx.room.Entity
+import androidx.room.Ignore
 import androidx.room.PrimaryKey
 import com.zhudapps.darkcanary.domain.room.ForecastDatabase.Companion.TIME_MACHINE_FORECASTS
 import java.util.*
@@ -20,5 +22,16 @@ data class TimeMachineForecast(
   var timezone: String,
   var latitude: String,
   var longitude: String,
+  @Ignore var dayOfWeek: String,
   @Embedded var daily: Daily
-)
+) {
+  constructor() : this(
+    -1,
+    "",
+    "",
+    "",
+    "",
+    "",
+    Daily()
+  )
+}

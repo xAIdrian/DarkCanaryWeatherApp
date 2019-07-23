@@ -55,6 +55,16 @@ class MainActivity : DaggerAppCompatActivity() {
         with(pager) {
             val viewPagerAdapter = ViewPagerAdapter(supportFragmentManager, this@MainActivity.lifecycle)
             adapter = viewPagerAdapter
+
+            registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
+
+                override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {
+                    super.onPageScrolled(position, positionOffset, positionOffsetPixels)
+
+                    //todo further animations belong here.
+                    //translate items left from center at positionOffsetPixels / 2
+                }
+            })
         }
     }
 

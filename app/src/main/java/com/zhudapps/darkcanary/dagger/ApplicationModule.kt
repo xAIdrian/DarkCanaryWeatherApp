@@ -10,6 +10,7 @@ import com.zhudapps.darkcanary.dagger.viewmodel.ViewModelProviderFactory
 import com.zhudapps.darkcanary.domain.retrofit.DarkSkyEndpoint
 import com.zhudapps.darkcanary.domain.retrofit.RetrofitServiceBuilder
 import com.zhudapps.darkcanary.forecast.ForecastViewModel
+import com.zhudapps.darkcanary.forecastdetail.ForecastDetailViewModel
 import com.zhudapps.darkcanary.main.MainViewModel
 import dagger.Module
 import dagger.Provides
@@ -37,9 +38,10 @@ class ApplicationModule {
     @Provides
     fun provideViewModelProvider(
         mainViewModel: MainViewModel,
-        forecast: ForecastViewModel
+        forecastViewModel: ForecastViewModel,
+        forecastDetailViewModel: ForecastDetailViewModel
     ): ViewModelProvider.Factory {
-        return ViewModelProviderFactory(mainViewModel, forecast)
+        return ViewModelProviderFactory(mainViewModel, forecastViewModel,forecastDetailViewModel)
     }
 
     @Provides

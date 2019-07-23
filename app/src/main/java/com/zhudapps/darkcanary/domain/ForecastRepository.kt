@@ -23,6 +23,8 @@ class ForecastRepository @Inject constructor(
     private val forecastDao: ForecastDao
 ) : IForecastRepository {
 
+    var currentTimeMachinneForecast: TimeMachineForecast? = null
+
     override fun fetchForecast(
         latitude: Double,
         longitude: Double,

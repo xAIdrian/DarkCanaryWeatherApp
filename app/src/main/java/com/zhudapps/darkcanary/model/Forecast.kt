@@ -1,11 +1,8 @@
 package com.zhudapps.darkcanary.model
 
 import androidx.annotation.NonNull
-import androidx.room.ColumnInfo
-import androidx.room.Entity
-import androidx.room.ForeignKey
+import androidx.room.*
 import androidx.room.ForeignKey.CASCADE
-import androidx.room.PrimaryKey
 import com.zhudapps.darkcanary.domain.room.ForecastDatabase.Companion.DAILY_ID
 import com.zhudapps.darkcanary.domain.room.ForecastDatabase.Companion.DAY_ID
 import com.zhudapps.darkcanary.domain.room.ForecastDatabase.Companion.FORECASTS

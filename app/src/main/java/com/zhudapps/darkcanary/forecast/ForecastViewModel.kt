@@ -4,8 +4,10 @@ import android.annotation.SuppressLint
 import android.location.Location
 import android.net.ConnectivityManager
 import android.util.Log
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.hadilq.liveevent.LiveEvent
 import com.zhudapps.darkcanary.domain.ForecastRepository
 import com.zhudapps.darkcanary.main.MainViewModel
 import com.zhudapps.darkcanary.model.TimeMachineForecast
@@ -15,7 +17,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
-import java.util.*
 import javax.inject.Inject
 
 class ForecastViewModel @Inject constructor(
@@ -27,6 +28,12 @@ class ForecastViewModel @Inject constructor(
         private const val TAG = "ForecastViewModel"
     }
 
+    init {
+        Log.e(TAG, "hello from viewmodel")
+    }
+
+    private var currentTimeMachineForecast: TimeMachineForecast? = null
+
     internal var mainViewModel: MainViewModel? = null
         set(value) {
             field = value
@@ -35,6 +42,10 @@ class ForecastViewModel @Inject constructor(
     var forecastIndex: Int = -1
 
     val forecastLiveData = MutableLiveData<TimeMachineForecast>()
+    //https://github.com/hadilq/LiveEvent/
+    private val eventStart = LiveEvent<String>()
+    val launchDetailsFragmentEvent: LiveData<String> = eventStart
+
 
     private fun setObservables(mainViewModel: MainViewModel) {
         mainViewModel.lastKnownLocationLiveData.observeForever { location: Location? ->
@@ -56,6 +67,7 @@ class ForecastViewModel @Inject constructor(
 
     @SuppressLint("CheckResult")
     private fun getForecastWithLocation(forecastDate: Long, userLocation: Location?) {
+
         if (userLocation != null) {
 
             GlobalScope.launch(Dispatchers.IO) {
@@ -72,7 +84,10 @@ class ForecastViewModel @Inject constructor(
                         .subscribe(
                             { forecast ->
                                 forecast?.let {
-                                    forecastLiveData.value = it
+                                    forecastLiveData.value = it.apply {
+                                        dayOfWeek = getDisplayDate(forecastDate)
+                                    }
+                                    currentTimeMachineForecast = it
                                 }
                             }, {
                                 //error state
@@ -103,12 +118,15 @@ class ForecastViewModel @Inject constructor(
         }
     }
 
-    fun getDisplayDate(time: String): String {
-        val sdf = SimpleDateFormat("EEEE")
-        return sdf.format(
-            Date(
-                getForecastDate(time.toLong(), forecastIndex)
-            )
-        )
+    @SuppressLint("SimpleDateFormat") //todo get back to translating Timezone to Locale
+    fun getDisplayDate(time: Long): String {
+        val format = SimpleDateFormat("EEEE")
+        val dateFormat = java.util.Date(time * 1000)
+        return format.format(dateFormat)
+    }
+
+    fun launchDetailsFragment() {
+        forecastRepository.currentTimeMachinneForecast = this.currentTimeMachineForecast
+        eventStart.value = "getterString"
     }
 }
