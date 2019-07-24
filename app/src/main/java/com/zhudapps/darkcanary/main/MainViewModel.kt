@@ -6,12 +6,17 @@ import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.google.android.gms.location.FusedLocationProviderClient
+import com.zhudapps.darkcanary.forecast.ForecastFragment
 import javax.inject.Inject
 
 /**
  * Created by adrian mohnacs on 2019-07-12
  */
 class MainViewModel @Inject constructor(private val fusedLocationClient: FusedLocationProviderClient): ViewModel() {
+
+    init {
+        Log.e(TAG, "breaker startup")
+    }
 
     companion object {
         private const val TAG = "MainViewModel"

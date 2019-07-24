@@ -14,14 +14,37 @@ import kotlinx.coroutines.launch
 import retrofit2.Response
 import java.util.*
 import javax.inject.Inject
+import javax.inject.Singleton
 
 /**
  * Created by adrian mohnacs on 2019-07-13
  */
+@Singleton
 class ForecastRepository @Inject constructor(
     private val forecastEndpoint: DarkSkyEndpoint,
     private val forecastDao: ForecastDao
 ) : IForecastRepository {
+
+    init {
+        Log.e("ForecastRepo", "init forecast repo")
+    }
+
+    override fun fetchForecast(
+        latitude: String,
+        longitude: String,
+        time: Long,
+        isConnectedToInternet: Boolean,
+        id: Int
+    ): Single<TimeMachineForecast> {
+
+        return fetchForecast(
+            latitude.toDouble(),
+            latitude.toDouble(),
+            time,
+            isConnectedToInternet,
+            id
+        )
+    }
 
     var currentTimeMachinneForecast: TimeMachineForecast? = null
 

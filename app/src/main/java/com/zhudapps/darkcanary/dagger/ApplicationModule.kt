@@ -41,7 +41,7 @@ class ApplicationModule {
         forecastViewModel: ForecastViewModel,
         forecastDetailViewModel: ForecastDetailViewModel
     ): ViewModelProvider.Factory {
-        return ViewModelProviderFactory(mainViewModel, forecastViewModel,forecastDetailViewModel)
+        return ViewModelProviderFactory(mainViewModel, forecastViewModel, forecastDetailViewModel)
     }
 
     @Provides

@@ -8,25 +8,28 @@ import android.view.View
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.snackbar.Snackbar
 import com.zhudapps.darkcanary.R
+import com.zhudapps.darkcanary.dagger.viewmodel.ViewModelProviderFactory
 import com.zhudapps.darkcanary.forecast.ForecastFragment
-import dagger.android.support.DaggerAppCompatActivity
+import com.zhudapps.darkcanary.forecast.OnFragmentListener
+import dagger.android.AndroidInjection
+import dagger.android.AndroidInjector
+import dagger.android.DispatchingAndroidInjector
+import dagger.android.support.HasSupportFragmentInjector
 import javax.inject.Inject
 
 /**
  * Following the decision for one Activity here we contain the ViewPager2 used with ForecastFragments
  * and initiate calls for user location
  */
-class MainActivity : DaggerAppCompatActivity() {
+class MainActivity : FragmentActivity(), HasSupportFragmentInjector, OnFragmentListener {
 
     companion object {
         private const val TAG = "MainActivity"
@@ -34,13 +37,20 @@ class MainActivity : DaggerAppCompatActivity() {
     }
 
     @Inject
-    lateinit var factory: ViewModelProvider.Factory
+    lateinit var factory: ViewModelProviderFactory
+
+    @Inject
+    lateinit var androidInjector: DispatchingAndroidInjector<Any>
+
+    @Inject lateinit var fragmentDispatchingAndroidInjector: DispatchingAndroidInjector<Fragment>
 
     private var viewModel: MainViewModel? = null
+    private var currentFragmentPos: Int = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.main_activity)
+        AndroidInjection.inject(this);
 
         if (::factory.isInitialized) {
             viewModel = ViewModelProviders.of(this, factory).get(MainViewModel::class.java)
@@ -48,6 +58,10 @@ class MainActivity : DaggerAppCompatActivity() {
             managePermissions()
         }
         setUpViewPager()
+    }
+
+    override fun supportFragmentInjector(): AndroidInjector<Fragment> {
+        return fragmentDispatchingAndroidInjector
     }
 
     private fun setUpViewPager() {
@@ -112,6 +126,14 @@ class MainActivity : DaggerAppCompatActivity() {
         }
     }
 
+    override fun fragmentTrackingCallback(position: Int) {
+        currentFragmentPos = position
+    }
+
+    override fun getCurrentFragmentIndex(): Int {
+        return currentFragmentPos
+    }
+
     inner class ShowPermissionRequest : View.OnClickListener {
 
         override fun onClick(v: View) {
@@ -127,6 +149,8 @@ class MainActivity : DaggerAppCompatActivity() {
     private inner class ViewPagerAdapter(fm: FragmentManager, lifeCycleFromActivity: Lifecycle) : FragmentStateAdapter(fm, lifeCycleFromActivity) {
         override fun getItemCount(): Int = 7
 
-        override fun createFragment(position: Int): Fragment  = ForecastFragment.newInstance(position)
+        override fun createFragment(position: Int): Fragment  {
+            return ForecastFragment.newInstance(position)
+        }
     }
 }

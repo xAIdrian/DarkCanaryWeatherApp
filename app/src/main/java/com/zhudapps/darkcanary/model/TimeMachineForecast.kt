@@ -22,6 +22,7 @@ data class TimeMachineForecast(
   var timezone: String,
   var latitude: String,
   var longitude: String,
+  @Ignore var time: Long,
   @Ignore var dayOfWeek: String,
   @Embedded var daily: Daily
 ) {
@@ -31,6 +32,7 @@ data class TimeMachineForecast(
     "",
     "",
     "",
+    0,
     "",
     Daily()
   )

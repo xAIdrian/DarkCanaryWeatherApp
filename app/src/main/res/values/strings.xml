@@ -8,4 +8,8 @@
     <string name="view_details">View Details</string>
     <string name="seven_days">Your 7 Day Forecast</string>
     <string name="forecast_database">forecast_room_database</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="welcome">Welcome to Dark Canary. All the weather minus the distractions</string>
 </resources>

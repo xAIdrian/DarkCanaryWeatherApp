@@ -33,6 +33,7 @@ class ForecastDetailFragment : DaggerFragment() {
         super.onActivityCreated(savedInstanceState)
         if (::factory.isInitialized) {
             viewModel = ViewModelProviders.of(this, factory).get(ForecastDetailViewModel::class.java)
+            viewModel.getCurrentTimeMachineForcast()
         }
     }
 

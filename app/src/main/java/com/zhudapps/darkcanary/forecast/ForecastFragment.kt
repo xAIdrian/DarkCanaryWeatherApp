@@ -1,10 +1,11 @@
 package com.zhudapps.darkcanary.forecast
 
+import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.zhudapps.darkcanary.R
@@ -38,6 +39,7 @@ class ForecastFragment : DaggerFragment() {
     lateinit var factory: ViewModelProviderFactory
 
     private lateinit var viewModel: ForecastViewModel
+    private var listener: OnFragmentListener? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -48,13 +50,19 @@ class ForecastFragment : DaggerFragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        if (::factory.isInitialized) {
-            val mainViewModel = activity?.let { ViewModelProviders.of(it, factory).get(MainViewModel::class.java) }
-            viewModel = ViewModelProviders.of(this@ForecastFragment, factory)
+
+        if (::factory.isInitialized && activity != null) {
+
+            val mainViewModel = activity?.let { ViewModelProviders.of(activity!!, factory).get(MainViewModel::class.java) }
+            viewModel = ViewModelProviders.of(activity!!, factory)
                 .get(FORECAST_VIEWMODEL_KEY, ForecastViewModel::class.java)
 
             viewModel.mainViewModel = mainViewModel
+
             arguments?.getInt(FORECAST_DAY_OFFSET)?.let {
+                listener?.fragmentTrackingCallback(it)
+                viewModel.readyForNextCall = true
+
                 viewModel.getForecast(it)
             }
 
@@ -75,6 +83,20 @@ class ForecastFragment : DaggerFragment() {
         }
     }
 
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        if (context is OnFragmentListener) {
+            listener = context
+        } else {
+            throw RuntimeException(context.toString() + " must implement OnFragmentListener")
+        }
+    }
+
+    override fun onDetach() {
+        super.onDetach()
+        listener = null
+    }
+
     private fun launchDetailsFragment() {
         activity?.supportFragmentManager?.beginTransaction()
             ?.replace(R.id.content, ForecastDetailFragment.newInstance())
@@ -83,6 +105,13 @@ class ForecastFragment : DaggerFragment() {
     }
 
     private fun setForcastData(timeMachineForecast: TimeMachineForecast) {
+
+        if (listener?.getCurrentFragmentIndex() != arguments?.getInt(FORECAST_DAY_OFFSET)) {
+            return
+        }
+
+        Log.e(TAG, "forecast datareturned")
+        viewModel.readyForNextCall = false
 
         progress_spinner.visibility = View.GONE
         fragment_content.visibility = View.VISIBLE
@@ -114,6 +143,5 @@ class ForecastFragment : DaggerFragment() {
         summary_title.text = daily.summary
         high_temp.text = daily.apparentTemperatureHigh
         low_temp.text = daily.apparentTemperatureLow
-
     }
 }

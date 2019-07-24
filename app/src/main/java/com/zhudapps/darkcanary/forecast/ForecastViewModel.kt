@@ -1,6 +1,5 @@
 package com.zhudapps.darkcanary.forecast
 
-import android.annotation.SuppressLint
 import android.location.Location
 import android.net.ConnectivityManager
 import android.util.Log
@@ -8,17 +7,17 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.hadilq.liveevent.LiveEvent
+import com.zhudapps.darkcanary.common.DateTimeUtils
 import com.zhudapps.darkcanary.domain.ForecastRepository
 import com.zhudapps.darkcanary.main.MainViewModel
 import com.zhudapps.darkcanary.model.TimeMachineForecast
 import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
-import java.text.SimpleDateFormat
 import javax.inject.Inject
+import javax.inject.Singleton
 
+@Singleton
 class ForecastViewModel @Inject constructor(
     private val forecastRepository: ForecastRepository,
     private val connectivityManager: ConnectivityManager
@@ -32,20 +31,30 @@ class ForecastViewModel @Inject constructor(
         Log.e(TAG, "hello from viewmodel")
     }
 
-    private var currentTimeMachineForecast: TimeMachineForecast? = null
-
     internal var mainViewModel: MainViewModel? = null
         set(value) {
             field = value
             field?.let { setObservables(it) }
         }
+
+    private var currentTimeMachineForecast: TimeMachineForecast? = null
     var forecastIndex: Int = -1
+    private var userLocation: Location? = null
 
     val forecastLiveData = MutableLiveData<TimeMachineForecast>()
-    //https://github.com/hadilq/LiveEvent/
-    private val eventStart = LiveEvent<String>()
+
+    private val eventStart = LiveEvent<String>() //https://github.com/hadilq/LiveEvent/
     val launchDetailsFragmentEvent: LiveData<String> = eventStart
 
+    var readyForNextCall = false
+
+    private val compositeDisposable = CompositeDisposable()
+
+    override fun onCleared() {
+        compositeDisposable.dispose()
+
+        super.onCleared()
+    }
 
     private fun setObservables(mainViewModel: MainViewModel) {
         mainViewModel.lastKnownLocationLiveData.observeForever { location: Location? ->
@@ -54,25 +63,22 @@ class ForecastViewModel @Inject constructor(
         }
     }
 
-    private var userLocation: Location? = null
-
     fun getForecast(offset: Int) {
 
-        if (offset != forecastIndex || forecastIndex == 0) { //daysOffset == 0 allowed to account for the initial call when we init location
+        if (offset != forecastIndex || forecastIndex == 0 && readyForNextCall) { //daysOffset == 0 allowed to account for the initial call when we init location
             forecastIndex = offset
-            val forecastDate = getForecastDate(System.currentTimeMillis(), forecastIndex)
+            val forecastDate = DateTimeUtils.getForecastDate(System.currentTimeMillis(), forecastIndex)
             getForecastWithLocation(forecastDate, userLocation)
         }
     }
 
-    @SuppressLint("CheckResult")
     private fun getForecastWithLocation(forecastDate: Long, userLocation: Location?) {
 
         if (userLocation != null) {
 
-            GlobalScope.launch(Dispatchers.IO) {
-                try {
-                    val connection = isInternetConnected()
+            try {
+                val connection = isInternetConnected()
+                compositeDisposable.add(
                     forecastRepository.fetchForecast(
                         userLocation.latitude,
                         userLocation.longitude,
@@ -85,7 +91,8 @@ class ForecastViewModel @Inject constructor(
                             { forecast ->
                                 forecast?.let {
                                     forecastLiveData.value = it.apply {
-                                        dayOfWeek = getDisplayDate(forecastDate)
+                                        dayOfWeek = DateTimeUtils.getDisplayDate(forecastDate)
+                                        time = forecastDate
                                     }
                                     currentTimeMachineForecast = it
                                 }
@@ -93,10 +100,9 @@ class ForecastViewModel @Inject constructor(
                                 //error state
                                 Log.e(TAG, it.message ?: it.toString())
                             })
-
-                } catch (e: Exception) {
-                    Log.e(TAG, e.message ?: "e is null")
-                }
+                )
+            } catch (e: Exception) {
+                Log.e(TAG, e.message ?: "e is null")
             }
         } else {
             mainViewModel?.initUserLocation()
@@ -107,22 +113,6 @@ class ForecastViewModel @Inject constructor(
         val network = connectivityManager.activeNetwork
         val capabilities = connectivityManager.getNetworkCapabilities(network)
         return capabilities != null
-    }
-
-    private fun getForecastDate(current: Long, dayOffset: Int): Long {
-        return if (dayOffset > 0) {
-            val getDays = dayOffset * 24 * 60 * 60 * 1000L
-            (current + getDays) / 1000
-        } else {
-            current / 1000
-        }
-    }
-
-    @SuppressLint("SimpleDateFormat") //todo get back to translating Timezone to Locale
-    fun getDisplayDate(time: Long): String {
-        val format = SimpleDateFormat("EEEE")
-        val dateFormat = java.util.Date(time * 1000)
-        return format.format(dateFormat)
     }
 
     fun launchDetailsFragment() {
