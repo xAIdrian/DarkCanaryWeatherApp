@@ -12,4 +12,14 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="welcome">Welcome to Dark Canary. All the weather minus the distractions</string>
+    <string name="pecip_probability">Preceipitation Probability</string>
+    <string name="cloud_cover">Cloud Cover</string>
+    <string name="precip_intensity">Precipitation Intensity</string>
+    <string name="humidity">Humidity</string>
+
+    <string name="temperature">Temperature</string>
+    <string name="uv_index">UV Index</string>
+    <string name="wind_speed">Wind Speed</string>
+    <string name="wind_bearing">Wind Bearing</string>
+    <string name="pressure">Pressure</string>
 </resources>

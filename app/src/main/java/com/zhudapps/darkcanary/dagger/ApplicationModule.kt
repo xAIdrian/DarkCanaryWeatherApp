@@ -2,6 +2,7 @@ package com.zhudapps.darkcanary.dagger
 
 import android.app.Application
 import android.content.Context
+import android.location.Geocoder
 import android.net.ConnectivityManager
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.gms.location.FusedLocationProviderClient
@@ -14,6 +15,7 @@ import com.zhudapps.darkcanary.forecastdetail.ForecastDetailViewModel
 import com.zhudapps.darkcanary.main.MainViewModel
 import dagger.Module
 import dagger.Provides
+import java.util.*
 import javax.inject.Named
 import javax.inject.Singleton
 
@@ -54,5 +56,11 @@ class ApplicationModule {
     @Singleton
     fun provideConnectivityManager(context: Context): ConnectivityManager {
         return context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+    }
+
+    @Provides
+    @Singleton
+    fun provideGeolocator(context: Context): Geocoder {
+        return Geocoder(context, Locale.getDefault())
     }
 }

@@ -98,6 +98,8 @@ class ForecastFragment : DaggerFragment() {
     }
 
     private fun launchDetailsFragment() {
+        if (listener?.getCurrentFragmentIndex() != arguments?.getInt(FORECAST_DAY_OFFSET)) { return }
+
         activity?.supportFragmentManager?.beginTransaction()
             ?.replace(R.id.content, ForecastDetailFragment.newInstance())
             ?.addToBackStack(null)
@@ -106,9 +108,7 @@ class ForecastFragment : DaggerFragment() {
 
     private fun setForcastData(timeMachineForecast: TimeMachineForecast) {
 
-        if (listener?.getCurrentFragmentIndex() != arguments?.getInt(FORECAST_DAY_OFFSET)) {
-            return
-        }
+        if (listener?.getCurrentFragmentIndex() != arguments?.getInt(FORECAST_DAY_OFFSET)) { return }
 
         Log.e(TAG, "forecast datareturned")
         viewModel.readyForNextCall = false
