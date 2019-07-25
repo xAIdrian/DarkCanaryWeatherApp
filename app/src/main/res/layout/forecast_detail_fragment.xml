@@ -1,0 +1,338 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:background="@android:color/background_light"
+        tools:context=".forecastdetail.ForecastDetailFragment">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/fragment_content"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layout_constraintEnd_toEndOf="parent">
+
+        <TextView
+                android:id="@+id/date_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/seven_days"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:textStyle="bold"
+                android:gravity="center"
+                android:padding="@dimen/small_title_dimen"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="parent"/>
+
+        <TextView
+                android:id="@+id/summary_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:gravity="center"
+                android:layout_margin="@dimen/default_margin"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                tools:text="Partly cloudy with sunshine"
+                android:layout_marginTop="8dp"
+                app:layout_constraintTop_toBottomOf="@+id/date_title"/>
+
+        <TextView
+                android:id="@+id/location_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                app:layout_constraintTop_toBottomOf="@+id/summary_title"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                tools:text="Mountain View, California"
+                android:layout_margin="@dimen/default_margin"/>
+
+        <ImageView
+                android:id="@+id/rainy_imageview"
+                android:layout_width="@dimen/icon_size"
+                android:layout_height="@dimen/icon_size"
+                android:src="@drawable/ic_wi_rain_100"
+                android:tint="@color/colorAccent"
+                app:layout_constraintTop_toBottomOf="@+id/location_title"
+                app:layout_constraintStart_toStartOf="parent"
+                android:layout_marginStart="@dimen/default_margin"
+                android:layout_marginTop="@dimen/details_image_margin"
+                android:layout_marginBottom="@dimen/details_image_margin"/>
+
+        <TextView
+                android:id="@+id/pecip_probability_label"
+                android:text="@string/pecip_probability"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/default_margin"
+                app:layout_constraintStart_toEndOf="@+id/rainy_imageview"
+                app:layout_constraintBottom_toTopOf="@+id/cloud_cover_label"
+                android:layout_marginBottom="@dimen/default_margin"
+                android:layout_marginTop="@dimen/default_margin"
+                app:layout_constraintTop_toBottomOf="@+id/location_title"/>
+
+        <TextView
+                android:id="@+id/pecip_probability_text"
+                tools:text="TextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="@dimen/details_text_right_margin"
+                app:layout_constraintTop_toTopOf="@+id/pecip_probability_label"
+                app:layout_constraintBottom_toBottomOf="@+id/pecip_probability_label"/>
+
+        <TextView
+                android:id="@+id/cloud_cover_label"
+                android:text="@string/cloud_cover"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                app:layout_constraintStart_toEndOf="@+id/rainy_imageview"
+                app:layout_constraintTop_toTopOf="@+id/rainy_imageview"
+                app:layout_constraintBottom_toBottomOf="@+id/rainy_imageview"
+                app:layout_constraintVertical_bias="0.517"/>
+
+        <TextView
+                android:id="@+id/cloud_cover_text"
+                tools:text="TextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toTopOf="@+id/cloud_cover_label"
+                app:layout_constraintBottom_toBottomOf="@+id/cloud_cover_label"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_marginEnd="@dimen/details_text_right_margin"/>
+
+        <TextView
+                android:id="@+id/precip_itnesity_label"
+                android:text="@string/precip_intensity"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/default_margin"
+                app:layout_constraintStart_toEndOf="@+id/rainy_imageview"
+                app:layout_constraintBottom_toTopOf="@+id/view"
+                android:layout_marginTop="@dimen/default_margin"
+                app:layout_constraintTop_toBottomOf="@+id/cloud_cover_label"/>
+
+        <TextView
+                android:id="@+id/precip_itnesity_text"
+                tools:text="TextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toTopOf="@+id/precip_itnesity_label"
+                app:layout_constraintBottom_toBottomOf="@+id/precip_itnesity_label"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_marginEnd="@dimen/details_text_right_margin"/>
+
+        <View
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/divider_height_dimen"
+                android:background="@color/dividerColor"
+                android:layout_marginTop="44dp"
+                app:layout_constraintTop_toBottomOf="@+id/rainy_imageview"
+                android:id="@+id/view" app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="8dp"/>
+
+        <ImageView
+                android:id="@+id/sunny_imageview"
+                android:layout_width="@dimen/icon_size"
+                android:layout_height="@dimen/icon_size"
+                android:src="@drawable/ic_wi_day_sunny_100"
+                android:tint="@color/colorAccent"
+                app:layout_constraintStart_toStartOf="parent"
+                android:layout_marginStart="@dimen/default_margin"
+                android:layout_marginTop="@dimen/details_image_margin"
+                app:layout_constraintTop_toBottomOf="@+id/view"/>
+
+        <TextView
+                android:id="@+id/temperature_label"
+                android:text="@string/temperature"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toTopOf="@+id/sunny_imageview"
+                app:layout_constraintBottom_toBottomOf="@+id/sunny_imageview"
+                app:layout_constraintStart_toEndOf="@+id/sunny_imageview"
+                android:layout_marginStart="@dimen/default_margin"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_marginEnd="@dimen/default_margin"
+                app:layout_constraintHorizontal_bias="0.0"/>
+
+        <TextView
+                android:id="@+id/temperature_text"
+                tools:text="TextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toTopOf="@+id/temperature_label"
+                app:layout_constraintBottom_toBottomOf="@+id/temperature_label"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_marginEnd="@dimen/details_text_right_margin"/>
+
+        <TextView
+                android:id="@+id/humidity_label"
+                android:text="@string/humidity"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/default_margin"
+                app:layout_constraintBottom_toTopOf="@+id/temperature_label"
+                app:layout_constraintStart_toEndOf="@+id/sunny_imageview"
+                android:layout_marginStart="@dimen/default_margin"
+                android:layout_marginTop="@dimen/default_margin"
+                app:layout_constraintTop_toBottomOf="@+id/view"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_marginEnd="@dimen/default_margin"
+                app:layout_constraintHorizontal_bias="0.0"/>
+
+        <TextView
+                android:id="@+id/humidity_text"
+                tools:text="TextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toTopOf="@+id/humidity_label"
+                app:layout_constraintBottom_toBottomOf="@+id/humidity_label"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_marginEnd="@dimen/details_text_right_margin"/>
+
+        <TextView
+                android:id="@+id/uv_index_label"
+                android:text="@string/uv_index"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toEndOf="@+id/sunny_imageview"
+                android:layout_marginStart="@dimen/default_margin"
+                android:layout_marginBottom="@dimen/default_margin"
+                app:layout_constraintBottom_toTopOf="@+id/sun_imageview"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_marginEnd="@dimen/default_margin"
+                app:layout_constraintHorizontal_bias="0.0"
+                android:layout_marginTop="@dimen/default_margin"
+                app:layout_constraintTop_toBottomOf="@+id/temperature_label"/>
+
+        <TextView
+                android:id="@+id/uv_index_text"
+                tools:text="TextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_marginEnd="@dimen/details_text_right_margin"
+                app:layout_constraintTop_toTopOf="@+id/uv_index_label"
+                app:layout_constraintBottom_toBottomOf="@+id/uv_index_label"/>
+
+        <View
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/divider_height_dimen"
+                android:background="@color/dividerColor"
+                android:id="@+id/sun_imageview"
+                android:layout_marginTop="44dp"
+                app:layout_constraintTop_toBottomOf="@+id/sunny_imageview" app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent" android:layout_marginStart="8dp"/>
+
+        <View
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/divider_height_dimen"
+                android:background="@color/dividerColor"
+                android:id="@+id/sun_imageview2"
+                android:layout_marginTop="44dp"
+                app:layout_constraintTop_toBottomOf="@+id/wind_imageview"
+                app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="8dp"/>
+
+        <ImageView
+                android:id="@+id/wind_imageview"
+                android:layout_width="@dimen/icon_size"
+                android:layout_height="@dimen/icon_size"
+                android:src="@drawable/ic_wi_windy"
+                android:tint="@color/colorAccent"
+                app:layout_constraintStart_toStartOf="parent"
+                android:layout_marginStart="@dimen/default_margin"
+                android:layout_marginTop="@dimen/details_image_margin"
+                app:layout_constraintTop_toBottomOf="@+id/sun_imageview"/>
+
+        <TextView
+                android:id="@+id/wind_speed_label"
+                android:text="@string/wind_speed"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toTopOf="@+id/wind_imageview"
+                app:layout_constraintBottom_toBottomOf="@+id/wind_imageview"
+                app:layout_constraintStart_toEndOf="@+id/wind_imageview"
+                android:layout_marginStart="@dimen/default_margin"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_marginEnd="@dimen/default_margin"
+                app:layout_constraintHorizontal_bias="0.0"/>
+
+        <TextView
+                android:id="@+id/wind_speed_text"
+                tools:text="TextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintEnd_toEndOf="parent" 
+                android:layout_marginEnd="@dimen/details_text_right_margin"
+                app:layout_constraintTop_toTopOf="@+id/wind_speed_label"
+                app:layout_constraintBottom_toBottomOf="@+id/wind_speed_label"/>
+
+        <TextView
+                android:id="@+id/wind_bearing_label"
+                android:text="@string/wind_bearing"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toEndOf="@+id/wind_imageview"
+                android:layout_marginStart="@dimen/default_margin"
+                android:layout_marginBottom="@dimen/default_margin"
+                app:layout_constraintBottom_toTopOf="@+id/wind_speed_label"
+                android:layout_marginTop="@dimen/default_margin"
+                app:layout_constraintTop_toBottomOf="@+id/sun_imageview"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_marginEnd="@dimen/default_margin"
+                app:layout_constraintHorizontal_bias="0.0"/>
+
+        <TextView
+                android:id="@+id/wind_bearing_text"
+                tools:text="TextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toTopOf="@+id/wind_bearing_label"
+                app:layout_constraintBottom_toBottomOf="@+id/wind_bearing_label"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_marginEnd="@dimen/details_text_right_margin"/>
+
+        <TextView
+                android:id="@+id/pressure_label"
+                android:text="@string/pressure"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toEndOf="@+id/wind_imageview"
+                android:layout_marginStart="@dimen/default_margin"
+                android:layout_marginTop="@dimen/default_margin"
+                app:layout_constraintTop_toBottomOf="@+id/wind_speed_label"
+                android:layout_marginBottom="@dimen/default_margin"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_marginEnd="@dimen/default_margin"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintBottom_toTopOf="@+id/sun_imageview2"/>
+
+        <TextView
+                android:id="@+id/pressure_text"
+                tools:text="TextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" 
+                app:layout_constraintEnd_toEndOf="parent" 
+                android:layout_marginEnd="@dimen/details_text_right_margin"
+                app:layout_constraintTop_toTopOf="@+id/pressure_label"
+                app:layout_constraintBottom_toBottomOf="@+id/pressure_label"/>
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <ProgressBar
+            android:id="@+id/progress_spinner"
+            style="@style/Widget.AppCompat.ProgressBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:visibility="gone"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

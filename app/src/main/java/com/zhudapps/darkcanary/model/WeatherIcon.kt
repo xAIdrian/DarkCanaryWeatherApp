@@ -32,5 +32,6 @@ enum class WeatherIcon(val value: Int, val stringValue: String) {
     @SerializedName("thunderstorm")
     THUNDERSTORM(R.drawable.ic_wi_thunderstorm_100, "thunderstorm"),
     @SerializedName("tornado")
-    TORNADO(R.drawable.ic_wi_tornado_100, "tornado")
+    TORNADO(R.drawable.ic_wi_tornado_100, "tornado"),
+    UNKNOWN(R.drawable.ic_block_black_24dp, "unknown")
 }

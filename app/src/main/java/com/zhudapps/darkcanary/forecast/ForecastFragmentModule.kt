@@ -1,6 +1,5 @@
 package com.zhudapps.darkcanary.forecast
 
-import android.content.Context
 import android.net.ConnectivityManager
 import com.zhudapps.darkcanary.domain.ForecastRepository
 import dagger.Module

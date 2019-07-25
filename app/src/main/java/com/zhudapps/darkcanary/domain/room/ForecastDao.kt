@@ -3,9 +3,6 @@ package com.zhudapps.darkcanary.domain.room
 import androidx.room.*
 import com.zhudapps.darkcanary.domain.room.ForecastDatabase.Companion.ID
 import com.zhudapps.darkcanary.domain.room.ForecastDatabase.Companion.TIME_MACHINE_FORECASTS
-import com.zhudapps.darkcanary.model.Daily
-import com.zhudapps.darkcanary.model.Forecast
-import com.zhudapps.darkcanary.model.Hourly
 import com.zhudapps.darkcanary.model.TimeMachineForecast
 import io.reactivex.Single
 

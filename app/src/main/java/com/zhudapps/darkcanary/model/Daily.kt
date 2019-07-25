@@ -35,4 +35,10 @@ data class Daily(
 
     @SerializedName("data")
     var forecasts: ArrayList<Forecast>
-)
+) {
+    constructor() : this(
+        -1,
+        -1,
+        ArrayList<Forecast>()
+    )
+}
