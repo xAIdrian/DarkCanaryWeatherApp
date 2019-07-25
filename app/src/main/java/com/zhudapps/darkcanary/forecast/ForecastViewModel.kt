@@ -38,6 +38,7 @@ class ForecastViewModel @Inject constructor(
         }
 
     private var currentTimeMachineForecast: TimeMachineForecast? = null
+
     var forecastIndex: Int = -1
     private var userLocation: Location? = null
 
@@ -58,18 +59,26 @@ class ForecastViewModel @Inject constructor(
 
     private fun setObservables(mainViewModel: MainViewModel) {
         mainViewModel.lastKnownLocationLiveData.observeForever { location: Location? ->
-            userLocation = location
-            getForecast(forecastIndex)
+            //this can also be done overriding Locations "equals" method
+            if (userLocation?.latitude != location?.latitude
+                || userLocation?.longitude != userLocation?.longitude) {
+
+                userLocation = location
+
+                getForecast(forecastIndex)
+            }
         }
     }
 
     fun getForecast(offset: Int) {
 
-        if (offset != forecastIndex || forecastIndex == 0 && readyForNextCall) { //daysOffset == 0 allowed to account for the initial call when we init location
+        //if this is the first call to get the Forcast let it through
+        //otherwise the user's location has changed
+        //if (offset != forecastIndex || forecastIndex == 0 && readyForNextCall) { //daysOffset == 0 allowed to account for the initial call when we init location
             forecastIndex = offset
             val forecastDate = DateTimeUtils.getForecastDate(System.currentTimeMillis(), forecastIndex)
             getForecastWithLocation(forecastDate, userLocation)
-        }
+        //}
     }
 
     private fun getForecastWithLocation(forecastDate: Long, userLocation: Location?) {
@@ -93,8 +102,8 @@ class ForecastViewModel @Inject constructor(
                                     forecastLiveData.value = it.apply {
                                         dayOfWeek = DateTimeUtils.getDisplayDate(forecastDate)
                                         time = forecastDate
+                                        currentTimeMachineForecast = it
                                     }
-                                    currentTimeMachineForecast = it
                                 }
                             }, {
                                 //error state

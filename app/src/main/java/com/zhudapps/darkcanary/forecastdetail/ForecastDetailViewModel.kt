@@ -36,10 +36,8 @@ class ForecastDetailViewModel @Inject constructor(
     }
 
     fun getCurrentTimeMachineForcast() {
-        //todo offline implementation
         val currentForecast = repo.currentTimeMachinneForecast
         if (currentForecast != null) {
-            //todo conditions that indicate its "freshness"
 
             compositeDisposable.add(
                 repo.fetchForecast(

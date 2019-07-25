@@ -10,6 +10,7 @@ class ForecastViewModelTest {
 
     @Before
     fun setUp() {
+
     }
 
     @After

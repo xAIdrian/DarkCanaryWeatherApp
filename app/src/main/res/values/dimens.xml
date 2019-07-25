@@ -8,4 +8,5 @@
     <dimen name="divider_height_dimen">1dp</dimen>
     <dimen name="details_image_margin">48dp</dimen>
     <dimen name="details_text_right_margin">64dp</dimen>
+    <dimen name="small_title_dimen">24dp</dimen>
 </resources>

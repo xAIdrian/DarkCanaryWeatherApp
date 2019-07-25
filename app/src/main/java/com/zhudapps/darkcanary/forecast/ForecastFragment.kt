@@ -48,8 +48,8 @@ class ForecastFragment : DaggerFragment() {
         return inflater.inflate(R.layout.forecast_fragment, container, false)
     }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
         if (::factory.isInitialized && activity != null) {
 
@@ -110,7 +110,7 @@ class ForecastFragment : DaggerFragment() {
 
         if (listener?.getCurrentFragmentIndex() != arguments?.getInt(FORECAST_DAY_OFFSET)) { return }
 
-        Log.e(TAG, "forecast datareturned")
+        Log.e(TAG, "${arguments?.getInt(FORECAST_DAY_OFFSET)} ::: forecast datareturned")
         viewModel.readyForNextCall = false
 
         progress_spinner.visibility = View.GONE
