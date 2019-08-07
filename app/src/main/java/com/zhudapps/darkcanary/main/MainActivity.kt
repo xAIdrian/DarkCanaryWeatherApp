@@ -4,16 +4,24 @@ import android.Manifest
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.util.Log
+import android.view.Menu
+import android.view.MenuItem
 import android.view.View
+import android.widget.Toolbar
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.core.view.GravityCompat
+import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.FragmentManager
+import androidx.legacy.app.ActionBarDrawerToggle
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProviders
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.widget.ViewPager2
+import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.google.android.material.navigation.NavigationView
 import com.google.android.material.snackbar.Snackbar
 import com.zhudapps.darkcanary.R
 import com.zhudapps.darkcanary.dagger.viewmodel.ViewModelProviderFactory
@@ -29,7 +37,8 @@ import javax.inject.Inject
  * Following the decision for one Activity here we contain the ViewPager2 used with ForecastFragments
  * and initiate calls for user location
  */
-class MainActivity : FragmentActivity(), HasSupportFragmentInjector, OnFragmentListener {
+class MainActivity : FragmentActivity(), HasSupportFragmentInjector, OnFragmentListener,
+    NavigationView.OnNavigationItemSelectedListener {
 
     companion object {
         private const val TAG = "MainActivity"
@@ -49,7 +58,7 @@ class MainActivity : FragmentActivity(), HasSupportFragmentInjector, OnFragmentL
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.main_activity)
+        setContentView(R.layout.activity_main2)
         AndroidInjection.inject(this);
 
         if (::factory.isInitialized) {
@@ -57,11 +66,98 @@ class MainActivity : FragmentActivity(), HasSupportFragmentInjector, OnFragmentL
 
             managePermissions()
         }
+        setUpNavigationDrawer()
         setUpViewPager()
     }
 
     override fun supportFragmentInjector(): AndroidInjector<Fragment> {
         return fragmentDispatchingAndroidInjector
+    }
+
+    override fun onBackPressed() {
+        val drawerLayout: DrawerLayout = findViewById(R.id.drawer_layout)
+        if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
+            drawerLayout.closeDrawer(GravityCompat.START)
+        } else {
+            super.onBackPressed()
+        }
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        menuInflater.inflate(R.menu.main2, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        return when (item.itemId) {
+            R.id.action_settings -> true
+            else -> super.onOptionsItemSelected(item)
+        }
+    }
+
+    override fun onNavigationItemSelected(item: MenuItem): Boolean {
+        // Handle navigation view item clicks here.
+        when (item.itemId) {
+            R.id.nav_home -> {
+                // Handle the camera action
+            }
+            R.id.nav_gallery -> {
+
+            }
+            R.id.nav_slideshow -> {
+
+            }
+            R.id.nav_tools -> {
+
+            }
+            R.id.nav_share -> {
+
+            }
+            R.id.nav_send -> {
+
+            }
+        }
+        val drawerLayout: DrawerLayout = findViewById(R.id.drawer_layout)
+        drawerLayout.closeDrawer(GravityCompat.START)
+        return true
+    }
+
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+
+        when (requestCode) {
+            MY_PERMISSIONS_REQUEST_COURSE_LOCATION -> viewModel?.initUserLocation()
+        }
+    }
+
+    private fun setUpNavigationDrawer() {
+        val toolbar: Toolbar = findViewById(R.id.toolbar)
+        setActionBar(toolbar).apply {
+            title = ""
+            //setDisplayShowTitleEnabled(false);
+        }
+
+        val fab: FloatingActionButton = findViewById(R.id.fab)
+        fab.setOnClickListener { view ->
+            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+                .setAction("Action", null).show()
+        }
+        val drawerLayout: DrawerLayout = findViewById(R.id.drawer_layout)
+        val navView: NavigationView = findViewById(R.id.nav_view)
+        val toggle = ActionBarDrawerToggle(
+            this, drawerLayout,
+            R.drawable.ic_menu_white,
+            R.string.navigation_drawer_open,
+            R.string.navigation_drawer_close
+        )
+        drawerLayout.addDrawerListener(toggle)
+        toggle.syncState()
+
+        navView.setNavigationItemSelectedListener(this)
     }
 
     private fun setUpViewPager() {
@@ -79,14 +175,6 @@ class MainActivity : FragmentActivity(), HasSupportFragmentInjector, OnFragmentL
                     //translate items left from center at positionOffsetPixels / 2
                 }
             })
-        }
-    }
-
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-
-        when (requestCode) {
-            MY_PERMISSIONS_REQUEST_COURSE_LOCATION -> viewModel?.initUserLocation()
         }
     }
 
