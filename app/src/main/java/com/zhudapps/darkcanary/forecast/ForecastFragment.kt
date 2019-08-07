@@ -68,6 +68,7 @@ class ForecastFragment : DaggerFragment() {
 
             details_button.setOnClickListener {
                 viewModel.launchDetailsFragment()
+                launchDetailsFragment()
             }
 
             viewModel.forecastLiveData.observe(this, Observer {
@@ -75,10 +76,6 @@ class ForecastFragment : DaggerFragment() {
                 if (!it.daily.forecasts.isNullOrEmpty()) {
                     setForcastData(it)
                 }
-            })
-
-            viewModel.launchDetailsFragmentEvent.observe(this, Observer {
-                launchDetailsFragment()
             })
         }
     }
@@ -101,7 +98,7 @@ class ForecastFragment : DaggerFragment() {
         if (listener?.getCurrentFragmentIndex() != arguments?.getInt(FORECAST_DAY_OFFSET)) { return }
 
         activity?.supportFragmentManager?.beginTransaction()
-            ?.replace(R.id.content, ForecastDetailFragment.newInstance())
+            ?.replace(R.id.content_main, ForecastDetailFragment.newInstance())
             ?.addToBackStack(null)
             ?.commit()
     }

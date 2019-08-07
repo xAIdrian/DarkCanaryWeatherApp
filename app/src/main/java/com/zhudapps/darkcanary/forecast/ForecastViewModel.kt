@@ -3,10 +3,8 @@ package com.zhudapps.darkcanary.forecast
 import android.location.Location
 import android.net.ConnectivityManager
 import android.util.Log
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.hadilq.liveevent.LiveEvent
 import com.zhudapps.darkcanary.common.DateTimeUtils
 import com.zhudapps.darkcanary.domain.ForecastRepository
 import com.zhudapps.darkcanary.main.MainViewModel
@@ -43,9 +41,6 @@ class ForecastViewModel @Inject constructor(
     private var userLocation: Location? = null
 
     val forecastLiveData = MutableLiveData<TimeMachineForecast>()
-
-    private val eventStart = LiveEvent<String>() //https://github.com/hadilq/LiveEvent/
-    val launchDetailsFragmentEvent: LiveData<String> = eventStart
 
     var readyForNextCall = false
 
@@ -126,6 +121,5 @@ class ForecastViewModel @Inject constructor(
 
     fun launchDetailsFragment() {
         forecastRepository.currentTimeMachinneForecast = this.currentTimeMachineForecast
-        eventStart.value = "getterString"
     }
 }

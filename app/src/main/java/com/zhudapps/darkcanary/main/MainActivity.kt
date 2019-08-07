@@ -132,12 +132,15 @@ class MainActivity : DaggerAppCompatActivity(), HasSupportFragmentInjector, OnFr
 
     private fun setUpNavigationDrawer() {
         val toolbar: Toolbar = findViewById(R.id.toolbar)
-        setSupportActionBar(toolbar)
+        setSupportActionBar(toolbar).apply {
+            title = ""
+        }
 
         val drawerLayout: DrawerLayout = findViewById(R.id.drawer_layout)
         val navView: NavigationView = findViewById(R.id.nav_view)
         val toggle = ActionBarDrawerToggle(
-            this, drawerLayout,
+            this,
+            drawerLayout,
             toolbar,
             R.string.navigation_drawer_open,
             R.string.navigation_drawer_close
@@ -179,7 +182,7 @@ class MainActivity : DaggerAppCompatActivity(), HasSupportFragmentInjector, OnFr
                 )
             ) {
                 //permissions previously denied
-                findViewById<View>(R.id.content).apply {
+                findViewById<View>(R.id.content_main).apply {
                     Snackbar.make(
                         this,
                         R.string.please_permission,
