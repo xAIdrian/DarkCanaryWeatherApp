@@ -1,19 +1,27 @@
 package com.zhudapps.darkcanary.main
 
 import android.Manifest
+import android.content.Intent
 import android.content.pm.PackageManager
+import android.net.Uri
 import android.os.Bundle
 import android.util.Log
+import android.view.Menu
+import android.view.MenuItem
 import android.view.View
+import androidx.appcompat.app.ActionBarDrawerToggle
+import androidx.appcompat.widget.Toolbar
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.core.view.GravityCompat
+import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProviders
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.widget.ViewPager2
+import com.google.android.material.navigation.NavigationView
 import com.google.android.material.snackbar.Snackbar
 import com.zhudapps.darkcanary.R
 import com.zhudapps.darkcanary.dagger.viewmodel.ViewModelProviderFactory
@@ -22,6 +30,7 @@ import com.zhudapps.darkcanary.forecast.OnFragmentListener
 import dagger.android.AndroidInjection
 import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
+import dagger.android.support.DaggerAppCompatActivity
 import dagger.android.support.HasSupportFragmentInjector
 import javax.inject.Inject
 
@@ -29,7 +38,8 @@ import javax.inject.Inject
  * Following the decision for one Activity here we contain the ViewPager2 used with ForecastFragments
  * and initiate calls for user location
  */
-class MainActivity : FragmentActivity(), HasSupportFragmentInjector, OnFragmentListener {
+class MainActivity : DaggerAppCompatActivity(), HasSupportFragmentInjector, OnFragmentListener,
+    NavigationView.OnNavigationItemSelectedListener {
 
     companion object {
         private const val TAG = "MainActivity"
@@ -39,9 +49,6 @@ class MainActivity : FragmentActivity(), HasSupportFragmentInjector, OnFragmentL
     @Inject
     lateinit var factory: ViewModelProviderFactory
 
-    @Inject
-    lateinit var androidInjector: DispatchingAndroidInjector<Any>
-
     @Inject lateinit var fragmentDispatchingAndroidInjector: DispatchingAndroidInjector<Fragment>
 
     private var viewModel: MainViewModel? = null
@@ -49,7 +56,7 @@ class MainActivity : FragmentActivity(), HasSupportFragmentInjector, OnFragmentL
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.main_activity)
+        setContentView(R.layout.activity_main)
         AndroidInjection.inject(this);
 
         if (::factory.isInitialized) {
@@ -57,11 +64,88 @@ class MainActivity : FragmentActivity(), HasSupportFragmentInjector, OnFragmentL
 
             managePermissions()
         }
+        setUpNavigationDrawer()
         setUpViewPager()
     }
 
     override fun supportFragmentInjector(): AndroidInjector<Fragment> {
         return fragmentDispatchingAndroidInjector
+    }
+
+    override fun onBackPressed() {
+        val drawerLayout: DrawerLayout = findViewById(R.id.drawer_layout)
+        if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
+            drawerLayout.closeDrawer(GravityCompat.START)
+        } else {
+            super.onBackPressed()
+        }
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        menuInflater.inflate(R.menu.main2, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        return when (item.itemId) {
+            R.id.action_settings -> true
+            else -> super.onOptionsItemSelected(item)
+        }
+    }
+
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+
+        when (requestCode) {
+            MY_PERMISSIONS_REQUEST_COURSE_LOCATION -> viewModel?.initUserLocation()
+        }
+    }
+
+    override fun onNavigationItemSelected(item: MenuItem): Boolean {
+        // Handle navigation view item clicks here.
+        when (item.itemId) {
+            R.id.nav_cultured -> {
+                sendToWeb("https://play.google.com/store/apps/details?id=com.zhudapps.materialcultured")
+            }
+            R.id.nav_number -> {
+                sendToWeb("https://play.google.com/store/apps/details?id=com.zhudapps.materialcuteapp")
+            }
+            R.id.nav_github -> {
+                sendToWeb("https://www.github.com/amohnacs15")
+            }
+        }
+        val drawerLayout: DrawerLayout = findViewById(R.id.drawer_layout)
+        drawerLayout.closeDrawer(GravityCompat.START)
+        return true
+    }
+
+    private fun sendToWeb(url: String) {
+
+        val i = Intent(Intent.ACTION_VIEW)
+        i.data = Uri.parse(url)
+        startActivity(i)
+    }
+
+    private fun setUpNavigationDrawer() {
+        val toolbar: Toolbar = findViewById(R.id.toolbar)
+        setSupportActionBar(toolbar)
+
+        val drawerLayout: DrawerLayout = findViewById(R.id.drawer_layout)
+        val navView: NavigationView = findViewById(R.id.nav_view)
+        val toggle = ActionBarDrawerToggle(
+            this, drawerLayout,
+            toolbar,
+            R.string.navigation_drawer_open,
+            R.string.navigation_drawer_close
+        )
+        drawerLayout.addDrawerListener(toggle)
+        toggle.syncState()
+
+        navView.setNavigationItemSelectedListener(this)
     }
 
     private fun setUpViewPager() {
@@ -79,14 +163,6 @@ class MainActivity : FragmentActivity(), HasSupportFragmentInjector, OnFragmentL
                     //translate items left from center at positionOffsetPixels / 2
                 }
             })
-        }
-    }
-
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-
-        when (requestCode) {
-            MY_PERMISSIONS_REQUEST_COURSE_LOCATION -> viewModel?.initUserLocation()
         }
     }
 
