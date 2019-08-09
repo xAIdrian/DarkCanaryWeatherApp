@@ -36,35 +36,13 @@ class ForecastDetailViewModel @Inject constructor(
     }
 
     fun getCurrentTimeMachineForcast() {
-        val currentForecast = repo.currentTimeMachinneForecast
-        if (currentForecast != null) {
-
-            compositeDisposable.add(
-                repo.fetchForecast(
-                    currentForecast.latitude,
-                    currentForecast.longitude,
-                    currentForecast.time,
-                    true,
-                    currentForecast.id
-                ).subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(
-                        { forecast ->
-                            forecast?.let {
-                                forecastLiveData.value = it.apply {
-                                    dayOfWeek = DateTimeUtils.getDisplayDate(currentForecast.time)
-                                    displayDate.value = repo.currentTimeMachinneForecast?.time?.let { DateTimeUtils.getDisplayDate(it) } ?: "No time indicated"
-                                }
-                            }
-                        }, {
-                            //error state
-                            Log.e("TAG for ForecastDetailViewModel", it.message ?: it.toString())
-                        }
-                    )
-            )
-        } else {
-            throw Exception("Something has gone wrong and we have never set the current Forecast")
-
+        forecastLiveData.value = repo.currentTimeMachinneForecast.apply {
+            this?.let {
+                dayOfWeek = DateTimeUtils.getDisplayDate(time)
+                displayDate.value = repo.currentTimeMachinneForecast?.time?.let {
+                    DateTimeUtils.getDisplayDate(it)
+                } ?: "No time indicated"
+            }
         }
     }
 
@@ -77,16 +55,17 @@ class ForecastDetailViewModel @Inject constructor(
                 addresses = geocoder.getFromLocation(
                     currentForecast.latitude.toDouble(),
                     currentForecast.longitude.toDouble(),
-                    1)
+                    1
+                )
             } catch (ioException: IOException) {
                 // Catch network or other I/O problems.
-               // errorMessage = getString(R.string.service_not_available)
+                // errorMessage = getString(R.string.service_not_available)
                 //Log.e(TAG, errorMessage, ioException)
             } catch (illegalArgumentException: IllegalArgumentException) {
                 // Catch invalid latitude or longitude values.
                 //errorMessage = getString(R.string.invalid_lat_long_used)
                 //Log.e(TAG, "$errorMessage. Latitude = $location.latitude , " +
-                       // "Longitude =  $location.longitude", illegalArgumentException)
+                // "Longitude =  $location.longitude", illegalArgumentException)
             }
         }
 
@@ -111,3 +90,4 @@ class ForecastDetailViewModel @Inject constructor(
         }
     }
 }
+
