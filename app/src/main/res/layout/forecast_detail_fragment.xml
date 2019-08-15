@@ -6,7 +6,8 @@
         android:layout_height="match_parent"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:background="@android:color/background_light"
-        tools:context=".forecastdetail.ForecastDetailFragment">
+        tools:context=".forecastdetail.ForecastDetailFragment"
+        android:layout_marginTop="56dp" >
 
     <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/fragment_content"

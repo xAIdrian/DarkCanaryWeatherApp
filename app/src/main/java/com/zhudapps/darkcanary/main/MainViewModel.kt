@@ -8,7 +8,6 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.hadilq.liveevent.LiveEvent
-import com.zhudapps.darkcanary.forecast.ForecastFragment
 import javax.inject.Inject
 
 /**

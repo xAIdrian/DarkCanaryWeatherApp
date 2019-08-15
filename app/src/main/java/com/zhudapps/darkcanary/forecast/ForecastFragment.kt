@@ -24,13 +24,13 @@ class ForecastFragment : DaggerFragment() {
     companion object {
         private const val TAG = "ForecastFragment"
 
-        const val FORECAST_DAY_OFFSET = "forecast_day_offset"
+        const val FORECAST_DAY_OFFSET_INDEX = "forecast_day_offset"
 
         @JvmStatic
         fun newInstance(dayOffset: Int) =
             ForecastFragment().apply {
                 arguments = Bundle().apply {
-                    putInt(FORECAST_DAY_OFFSET, dayOffset)
+                    putInt(FORECAST_DAY_OFFSET_INDEX, dayOffset)
                 }
             }
     }
@@ -59,15 +59,23 @@ class ForecastFragment : DaggerFragment() {
 
             viewModel.mainViewModel = mainViewModel
 
-            arguments?.getInt(FORECAST_DAY_OFFSET)?.let {
+            arguments?.getInt(FORECAST_DAY_OFFSET_INDEX)?.let {
                 listener?.fragmentTrackingCallback(it)
                 viewModel.readyForNextCall = true
+
+                //todo check if it's the current fragment, that we're tracking in Activity
+                // if it is not the current fragment and we are +1 or -1 make the change to the OFFSET_INDEX
+                // and make the request still...
+                // when we are making the call when we are swiping, then we need to check a similar condition to keep
+                // from making the call again...isVisibleFragment
+
 
                 viewModel.getForecast(it)
             }
 
             details_button.setOnClickListener {
                 viewModel.launchDetailsFragment()
+                launchDetailsFragment()
             }
 
             viewModel.forecastLiveData.observe(this, Observer {
@@ -75,10 +83,6 @@ class ForecastFragment : DaggerFragment() {
                 if (!it.daily.forecasts.isNullOrEmpty()) {
                     setForcastData(it)
                 }
-            })
-
-            viewModel.launchDetailsFragmentEvent.observe(this, Observer {
-                launchDetailsFragment()
             })
         }
     }
@@ -98,19 +102,19 @@ class ForecastFragment : DaggerFragment() {
     }
 
     private fun launchDetailsFragment() {
-        if (listener?.getCurrentFragmentIndex() != arguments?.getInt(FORECAST_DAY_OFFSET)) { return }
+        if (listener?.getCurrentFragmentIndex() != arguments?.getInt(FORECAST_DAY_OFFSET_INDEX)) { return }
 
         activity?.supportFragmentManager?.beginTransaction()
-            ?.replace(R.id.content, ForecastDetailFragment.newInstance())
+            ?.replace(R.id.content_main, ForecastDetailFragment.newInstance())
             ?.addToBackStack(null)
             ?.commit()
     }
 
     private fun setForcastData(timeMachineForecast: TimeMachineForecast) {
 
-        if (listener?.getCurrentFragmentIndex() != arguments?.getInt(FORECAST_DAY_OFFSET)) { return }
+        if (!isVisibleFragment()) { return }
 
-        Log.e(TAG, "${arguments?.getInt(FORECAST_DAY_OFFSET)} ::: forecast datareturned")
+        Log.e(TAG, "${arguments?.getInt(FORECAST_DAY_OFFSET_INDEX)} ::: forecast datareturned")
         viewModel.readyForNextCall = false
 
         progress_spinner.visibility = View.GONE
@@ -143,5 +147,9 @@ class ForecastFragment : DaggerFragment() {
         summary_title.text = daily.summary
         high_temp.text = daily.apparentTemperatureHigh
         low_temp.text = daily.apparentTemperatureLow
+    }
+
+    fun isVisibleFragment(): Boolean {
+        return listener?.getCurrentFragmentIndex() == arguments?.getInt(FORECAST_DAY_OFFSET_INDEX)
     }
 }
