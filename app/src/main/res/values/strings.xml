@@ -9,7 +9,6 @@
     <string name="seven_days">Your 7 Day Forecast</string>
     <string name="forecast_database">forecast_room_database</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="welcome">Welcome to Dark Canary. All the weather minus the distractions</string>
     <string name="pecip_probability">Preceipitation Probability</string>
@@ -24,10 +23,10 @@
     <string name="pressure">Pressure</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
-    <string name="nav_header_title">Android Studio</string>
-    <string name="nav_header_subtitle">android.studio@android.com</string>
+    <string name="nav_header_title">Adrian Maximus Mohnacs</string>
+    <string name="nav_header_subtitle">amohnacs@gmail.com</string>
     <string name="nav_header_desc">Navigation header</string>
-    <string name="action_settings">Settings</string>
+    <string name="action_settings">Thank you!</string>
 
     <string name="menu_home">Cultured</string>
     <string name="menu_gallery">Get Her Number</string>
