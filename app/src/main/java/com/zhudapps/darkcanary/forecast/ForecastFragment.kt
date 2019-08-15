@@ -80,7 +80,7 @@ class ForecastFragment : DaggerFragment() {
 
             viewModel.forecastLiveData.observe(this, Observer {
 
-                if (!it.daily.forecasts.isNullOrEmpty()) {
+                if (!it.daily?.forecasts.isNullOrEmpty()) {
                     setForcastData(it)
                 }
             })
@@ -120,14 +120,14 @@ class ForecastFragment : DaggerFragment() {
         progress_spinner.visibility = View.GONE
         fragment_content.visibility = View.VISIBLE
 
-        val daily = timeMachineForecast.daily.forecasts[0]
+        val daily = timeMachineForecast.daily?.forecasts?.get(0)
 
         if (timeMachineForecast.dayOfWeek.isNotEmpty()) {
             date_title.text = timeMachineForecast.dayOfWeek
         }
 
         icon_image_view.setImageResource(
-            when (daily.icon) {
+            when (daily?.icon) {
                 WeatherIcon.CLEAR_DAY -> WeatherIcon.CLEAR_DAY.value
                 WeatherIcon.CLEAR_NIGHT -> WeatherIcon.CLEAR_NIGHT.value
                 WeatherIcon.CLOUDY -> WeatherIcon.CLOUDY.value
@@ -144,9 +144,9 @@ class ForecastFragment : DaggerFragment() {
                 else -> WeatherIcon.UNKNOWN.value
             }
         )
-        summary_title.text = daily.summary
-        high_temp.text = daily.apparentTemperatureHigh
-        low_temp.text = daily.apparentTemperatureLow
+        summary_title.text = daily?.summary
+        high_temp.text = daily?.apparentTemperatureHigh
+        low_temp.text = daily?.apparentTemperatureLow
     }
 
     fun isVisibleFragment(): Boolean {

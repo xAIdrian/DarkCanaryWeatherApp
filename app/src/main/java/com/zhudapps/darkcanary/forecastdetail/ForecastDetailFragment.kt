@@ -47,9 +47,10 @@ class ForecastDetailFragment : DaggerFragment() {
                         location_title.text = viewModel.location()
                     }
 
-                    if (it.daily.forecasts.isNotEmpty()) {
+                    val forecasts = it.daily?.forecasts
+                    if (forecasts?.isNotEmpty() == true) {
 
-                        it.daily.forecasts[0].apply {
+                        forecasts[0].apply {
 
                             summary_title.text = summary
 

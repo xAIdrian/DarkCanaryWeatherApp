@@ -24,7 +24,8 @@ data class TimeMachineForecast(
   var longitude: String,
   @Ignore var time: Long,
   @Ignore var dayOfWeek: String,
-  @Embedded var daily: Daily
+  @Ignore var daily: Daily?,
+  @Ignore var hourly: Hourly?
 ) {
   constructor() : this(
     -1,
@@ -34,6 +35,7 @@ data class TimeMachineForecast(
     "",
     0,
     "",
-    Daily()
+    null,
+    null
   )
 }

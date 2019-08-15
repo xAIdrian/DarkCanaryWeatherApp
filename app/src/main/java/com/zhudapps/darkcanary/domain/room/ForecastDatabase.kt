@@ -17,6 +17,7 @@ abstract class ForecastDatabase: RoomDatabase() {
     companion object {
 
         const val TIME_MACHINE_FORECASTS = "time_machine_forecasts"
+        const val HOURLIES = "hourlies"
         const val DAILIES = "dailies"
         const val FORECASTS = "forecasts"
 
