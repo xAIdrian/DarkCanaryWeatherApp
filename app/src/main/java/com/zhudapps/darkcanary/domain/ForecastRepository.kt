@@ -6,13 +6,9 @@ import com.zhudapps.darkcanary.domain.retrofit.DarkSkyEndpoint
 import com.zhudapps.darkcanary.domain.room.ForecastDao
 import com.zhudapps.darkcanary.model.TimeMachineForecast
 import io.reactivex.Single
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.schedulers.Schedulers
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
-import retrofit2.Response
-import java.util.*
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -59,8 +55,11 @@ class ForecastRepository @Inject constructor(
             return forecastEndpoint.getTimeMachineForecast(BuildConfig.apikey, latitude, longitude, time)
                 .doAfterSuccess {
                     it.id = id
-                    it.daily.dayid = id
-                    it.daily.forecastId = id
+                    it.daily?.dayid = id
+                    it.hourly?.hourid = id
+
+                    it.daily?.timeMachineForecastId = id
+                    it.hourly?.timeMachineForecastId = id
 
                     GlobalScope.launch(Dispatchers.IO) {
                         forecastDao.insertTimeMachineForecasts(it)
