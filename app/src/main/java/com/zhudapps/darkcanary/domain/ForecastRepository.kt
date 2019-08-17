@@ -56,7 +56,7 @@ class ForecastRepository @Inject constructor(
                 .doAfterSuccess {
                     it.id = id
                     it.daily?.dayid = id
-                    it.hourly?.hourId = id
+                    it.hourly?.hourid = id
 
                     it.daily?.timeMachineForecastId = id
                     it.hourly?.timeMachineForecastId = id

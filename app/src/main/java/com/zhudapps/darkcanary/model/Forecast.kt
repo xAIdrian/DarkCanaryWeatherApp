@@ -6,6 +6,8 @@ import androidx.room.ForeignKey.CASCADE
 import com.zhudapps.darkcanary.domain.room.ForecastDatabase.Companion.DAILY_ID
 import com.zhudapps.darkcanary.domain.room.ForecastDatabase.Companion.DAY_ID
 import com.zhudapps.darkcanary.domain.room.ForecastDatabase.Companion.FORECASTS
+import com.zhudapps.darkcanary.domain.room.ForecastDatabase.Companion.HOURLY_ID
+import com.zhudapps.darkcanary.domain.room.ForecastDatabase.Companion.HOUR_ID
 
 /**
  * Created by adrian mohnacs on 2019-07-13
@@ -19,6 +21,13 @@ import com.zhudapps.darkcanary.domain.room.ForecastDatabase.Companion.FORECASTS
             childColumns = arrayOf(DAILY_ID),
             onUpdate = CASCADE,
             onDelete = CASCADE
+        ),
+        ForeignKey(
+            entity = Hourly::class,
+            parentColumns = arrayOf(HOUR_ID),
+            childColumns = arrayOf(HOURLY_ID),
+            onUpdate = CASCADE,
+            onDelete = CASCADE
         )
     ]
 )
@@ -28,6 +37,8 @@ data class Forecast(
     var id: Int,
     @ColumnInfo(name = DAILY_ID)
     var dailyId: Int,
+    @ColumnInfo(name = HOURLY_ID)
+    var hourlyId: Int,
 
     var summary: String,
     var precipProbability: String,
