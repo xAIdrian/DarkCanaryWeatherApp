@@ -10,7 +10,8 @@
             android:id="@+id/fragment_content"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:visibility="gone">
+            android:visibility="gone"
+            tools:visibility="visible">
 
         <TextView
                 android:id="@+id/date_title"
@@ -100,20 +101,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 android:gravity="center"
-                app:layout_constraintVertical_bias="0.30"
-                app:layout_constraintBottom_toTopOf="@+id/details_button"/>
-
-        <Button
-                android:id="@+id/details_button"
-                android:layout_width="match_parent"
-                android:layout_height="?attr/actionBarSize"
-                android:text="@string/view_details"
-                android:gravity="center"
-                android:layout_margin="8dp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                style="@style/AppTheme.RoundedCornerMaterialButton"/>
+                app:layout_constraintVertical_bias="0.30"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
