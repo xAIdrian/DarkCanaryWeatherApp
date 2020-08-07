@@ -40,29 +40,31 @@
                 tools:src="@drawable/ic_wi_cloudy_100" app:layout_constraintHorizontal_bias="0.498"/>
 
         <TextView
-                android:id="@+id/summary_title"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:gravity="center"
-                app:layout_constraintTop_toBottomOf="@+id/date_title"
-                android:layout_margin="@dimen/default_margin"
-                app:layout_constraintBottom_toTopOf="@+id/high_temp_title"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                tools:text="Partly cloudy with sunshine" app:layout_constraintVertical_bias="0.666"/>
+            android:id="@+id/summary_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/default_margin"
+            android:gravity="center"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            app:layout_constraintBottom_toTopOf="@+id/high_temp_title"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/icon_image_view"
+            app:layout_constraintVertical_bias="0.666"
+            tools:text="Partly cloudy with sunshine" />
 
         <TextView
-                android:id="@+id/high_temp_title"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="@dimen/default_margin"
-                android:text="@string/high_temp"
-                android:textAppearance="?android:attr/textAppearanceLarge"
-                app:layout_constraintTop_toBottomOf="@+id/date_title"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent" android:layout_marginStart="8dp"
-                app:layout_constraintVertical_bias="0.30"/>
+            android:id="@+id/high_temp_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/default_margin"
+            android:layout_marginStart="8dp"
+            android:text="@string/high_temp"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/date_title"
+            app:layout_constraintVertical_bias="0.30" />
 
         <TextView
                 android:id="@+id/high_temp"
