@@ -73,11 +73,6 @@ class ForecastFragment : DaggerFragment() {
                 viewModel.getForecast(it)
             }
 
-            details_button.setOnClickListener {
-                viewModel.launchDetailsFragment()
-                launchDetailsFragment()
-            }
-
             viewModel.forecastLiveData.observe(this, Observer {
 
                 if (!it.daily?.forecasts.isNullOrEmpty()) {
